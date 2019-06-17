@@ -7,4 +7,6 @@ class SC {
   static const savedIndex = 'savedIndex';
   static const graphHeroTag = 'graph';
   static const amortHeroTag = 'amort';
+  static const inputPrefsKey = 'inputHistory';
+  static const themePrefsKey = 'theme';
 }

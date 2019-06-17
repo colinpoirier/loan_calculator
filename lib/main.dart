@@ -5,20 +5,33 @@ import 'package:loan_calc_dev/ui/route_generator/route_generator.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:loan_calc_dev/ui/themes/themes.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(MyApp());
+Future main() async {
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  final isDark = preferences.getBool(SC.themePrefsKey) ?? false;
+  runApp(MyApp(
+    isDark: isDark,
+  ));
+}
 
 class MyApp extends StatelessWidget {
+
+  const MyApp({Key key, this.isDark}) : super(key: key);
+
+  final bool isDark;  
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeProvider>(
-      builder: (_) => ThemeProvider(CalcThemes.lightTheme),
-      child: ThemeApp()
+      builder: (_) =>
+          ThemeProvider(isDark ? CalcThemes.darkTheme : CalcThemes.lightTheme),
+      child: ThemeApp(),
     );
   }
 }
 
-class ThemeApp extends StatelessWidget{
+class ThemeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context);
@@ -28,8 +41,10 @@ class ThemeApp extends StatelessWidget{
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      systemNavigationBarColor: themeToggle ? Colors.transparent : Colors.grey[850],
-      systemNavigationBarIconBrightness: themeToggle ? Brightness.dark : Brightness.light,
+      systemNavigationBarColor:
+          themeToggle ? Colors.transparent : Colors.grey[850],
+      systemNavigationBarIconBrightness:
+          themeToggle ? Brightness.dark : Brightness.light,
       statusBarIconBrightness: themeToggle ? Brightness.dark : Brightness.light,
     ));
     return MaterialApp(
@@ -40,6 +55,4 @@ class ThemeApp extends StatelessWidget{
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
-
-
 }

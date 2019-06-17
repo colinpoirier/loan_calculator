@@ -8,6 +8,7 @@ import 'package:loan_calc_dev/provider/theme_provider.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/rounded_appbar.dart';
 import 'package:loan_calc_dev/ui/pages/home_page/main_widgets/home_page_widgets.dart';
+import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:loan_calc_dev/ui/themes/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _roundDown = false;
 
   static const Duration expandedDuration = Duration(milliseconds: 300);
-  static const String prefsKey = 'inputHistory';
 
   String calChange = '';
 
@@ -115,12 +115,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future saveIptList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     final iptJsonList = iptList.map((ipt) => ipt.toJson()).toList();
-    preferences.setString(prefsKey, jsonEncode(iptJsonList));
+    await preferences.setString(SC.inputPrefsKey, jsonEncode(iptJsonList));
   }
 
   void loadIptList() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    final jsonString = preferences.getString(prefsKey);
+    final jsonString = preferences.getString(SC.inputPrefsKey);
     if (jsonString != null) {
       final json = jsonDecode(jsonString);
       iptList =
@@ -315,9 +315,14 @@ class _MyHomePageState extends State<MyHomePage> {
     final themeChange = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      onLongPress: () => themeChange.getTheme == CalcThemes.lightTheme
-          ? themeChange.setTheme(CalcThemes.darkTheme)
-          : themeChange.setTheme(CalcThemes.lightTheme),
+      onLongPress: () async {
+        final isDark = themeChange.getTheme == CalcThemes.darkTheme;
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        await preferences.setBool(SC.themePrefsKey, !isDark);
+        return isDark
+            ? themeChange.setTheme(CalcThemes.lightTheme)
+            : themeChange.setTheme(CalcThemes.darkTheme);
+      },
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: RoundedAppBar(
