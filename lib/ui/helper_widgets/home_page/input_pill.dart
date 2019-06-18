@@ -7,7 +7,6 @@ class InputPill extends StatelessWidget {
     this.timeChange,
     this.timeChanged = false,
     @required this.hintText,
-    // @required this.errorText,
     @required this.leadingText,
     @required this.controller,
     @required this.validator,
@@ -15,7 +14,6 @@ class InputPill extends StatelessWidget {
   }) : super(key: key);
 
   final String hintText;
-  // final String errorText;
   final ValueChanged<String> timeChange;
   final String leadingText;
   final bool toDisplay;
@@ -94,7 +92,7 @@ class InputPill extends StatelessWidget {
         ),
         Container(
           constraints: BoxConstraints(
-            maxWidth: (maxWidth - 145).clamp(0.0,215.0),
+            maxWidth: (maxWidth - 165).clamp(0.0,215.0),
           ),
           padding: const EdgeInsets.all(3.0),
           child: TextFormField(
@@ -107,7 +105,6 @@ class InputPill extends StatelessWidget {
             autovalidate: true,
             controller: controller,
             decoration: InputDecoration(
-              // errorText: errorText,
               hintText: hintText,
             ),
           ),
