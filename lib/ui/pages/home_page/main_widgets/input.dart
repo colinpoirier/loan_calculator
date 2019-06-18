@@ -29,75 +29,82 @@ class Input extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Form(
         key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            InputPill(
-              leadingText: "Loan Amount",
-              hintText: 'Currency',
-              validator: (val) {
-                if (val.isNotEmpty) {
-                  double amount = double.tryParse(val);
-                  if (amount == null) {
-                    return 'Please enter a number';
-                  } else if (amount > 100000000) {
-                    return 'Exceeds 100000000';
-                  } else if (amount < 0.01) {
-                    return 'Must be at least 0.01';
-                  }
-                }
-              },
-              controller: amountController,
-            ),
-            InputPill(
-              leadingText: "Interest",
-              hintText: 'Percent',
-              validator: (val) {
-                if (val.isNotEmpty) {
-                  double percent = double.tryParse(val);
-                  if (percent == null) {
-                    return 'Please enter a number';
-                  } else if (percent > 100) {
-                    return 'Exceeds 100.0';
-                  } else if (percent < 0.01) {
-                    return 'Must be at least 0.01';
-                  }
-                }
-              },
-              controller: percentController,
-            ),
-            InputPill(
-              toDisplay: true,
-              leadingText: "Length",
-              hintText: changeTime ? 'Years' : 'Months',
-              validator: (val) {
-                if (val.isNotEmpty) {
-                  double months = double.tryParse(val);
-                  if (months == null) {
-                    return 'Please enter a number';
-                  } else if (changeTime) {
-                    if (months > 50){
-                      return 'Exceeds 50';
-                    } else if (months < (1.0/12.0)){
-                      return 'Must be at least 0.08333...';
-                    } else if(months * 12 - (months * 12).toInt() != 0){
-                      return 'Not a whole Month';
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                InputPill(
+                  maxWidth: constraints.maxWidth,
+                  leadingText: "Loan Amount",
+                  hintText: 'Currency',
+                  validator: (val) {
+                    if (val.isNotEmpty) {
+                      double amount = double.tryParse(val);
+                      if (amount == null) {
+                        return 'Please enter a number';
+                      } else if (amount > 100000000) {
+                        return 'Exceeds 100000000';
+                      } else if (amount < 0.01) {
+                        return 'Must be at least 0.01';
+                      }
                     }
-                  } else if (months > 600) {
-                    return 'Exceeds 600';
-                  } else if (months < 1) {
-                    return 'Must be at least 1';                  
-                  } else if ((months - months.toInt()) != 0) {
-                    return 'Not a whole Month';
-                  }
-                }
-              },
-              controller: monthController,
-              timeChange: timeChange,
-              timeChanged: changeTime,
-            ),
-          ],
+                  },
+                  controller: amountController,
+                ),
+                InputPill(
+                  maxWidth: constraints.maxWidth,
+                  leadingText: "Interest",
+                  hintText: 'Percent',
+                  validator: (val) {
+                    if (val.isNotEmpty) {
+                      double percent = double.tryParse(val);
+                      if (percent == null) {
+                        return 'Please enter a number';
+                      } else if (percent > 100) {
+                        return 'Exceeds 100.0';
+                      } else if (percent < 0.01) {
+                        return 'Must be at least 0.01';
+                      }
+                    }
+                  },
+                  controller: percentController,
+                ),
+                InputPill(
+                  maxWidth: constraints.maxWidth,
+                  toDisplay: true,
+                  leadingText: "Length",
+                  hintText: changeTime ? 'Years' : 'Months',
+                  validator: (val) {
+                    if (val.isNotEmpty) {
+                      double months = double.tryParse(val);
+                      if (months == null) {
+                        return 'Please enter a number';
+                      } else if (changeTime) {
+                        if (months > 50){
+                          return 'Exceeds 50';
+                        } else if (months < (1.0/12.0)){
+                          return 'Must be at least 0.08333...';
+                        } else if(months * 12 - (months * 12).toInt() != 0){
+                          return 'Not a whole Month';
+                        }
+                      } else if (months > 600) {
+                        return 'Exceeds 600';
+                      } else if (months < 1) {
+                        return 'Must be at least 1';                  
+                      } else if ((months - months.toInt()) != 0) {
+                        return 'Not a whole Month';
+                      }
+                    }
+                  },
+                  controller: monthController,
+                  timeChange: timeChange,
+                  timeChanged: changeTime,
+                ),
+              ],
+            );
+          }
         ),
       ),
     );

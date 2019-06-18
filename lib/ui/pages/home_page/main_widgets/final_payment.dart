@@ -43,75 +43,81 @@ class FinalPayment extends StatelessWidget {
             softWrap: false,
             style: TextStyle(fontSize: 22.0),
           ),
-          Scroller.stack(
-            children: <Widget>[
-              ScaleSwitcher(
-                duration: expandedDuration,
-                child: Text(
-                  finalPayment,
-                  key: ValueKey(finalPayment),
-                  overflow: TextOverflow.clip,
-                  softWrap: false,
-                  style: const TextStyle(
-                    height: 1.2,
-                    fontSize: 37.0,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // print(MediaQuery.of(context).size);
+              // print(constraints);
+              return Scroller.stack(
                 children: <Widget>[
-                  DataContainer(
-                    topChild: const Text('List'),
-                    bottomChild: const Hero(
-                      tag: SC.amortHeroTag,
-                      child: Icon(
-                        Icons.format_align_center,
-                        size: 30.0,
+                  ScaleSwitcher(
+                    duration: expandedDuration,
+                    child: Text(
+                      finalPayment,
+                      key: ValueKey(finalPayment),
+                      overflow: TextOverflow.clip,
+                      softWrap: false,
+                      style: const TextStyle(
+                        height: 1.2,
+                        fontSize: 37.0,
                       ),
                     ),
-                    ontap: () {
-                      if (mbdList.length > 0) {
-                        Navigator.of(context).pushNamed(
-                          SC.amortListPage,
-                          arguments: {
-                            SC.mbdList: mbdList,
-                            SC.savedIndex: savedIndex,
+                  ),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        DataContainer(
+                          topChild: const Text('List'),
+                          bottomChild: const Hero(
+                            tag: SC.amortHeroTag,
+                            child: Icon(
+                              Icons.format_align_center,
+                              size: 30.0,
+                            ),
+                          ),
+                          ontap: () {
+                            if (mbdList.length > 0) {
+                              Navigator.of(context).pushNamed(
+                                SC.amortListPage,
+                                arguments: {
+                                  SC.mbdList: mbdList,
+                                  SC.savedIndex: savedIndex,
+                                },
+                              );
+                            }
                           },
-                        );
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    width: 230.0,
-                  ),
-                  DataContainer(
-                    topChild: const Text('Graph'),
-                    bottomChild: const Hero(
-                      tag: SC.graphHeroTag,
-                      child: RotatedBox(
-                        quarterTurns: 3,
-                        child: Icon(
-                          Icons.graphic_eq,
-                          size: 30.0,
                         ),
-                      ),
-                    ),
-                    ontap: () {
-                      if (mbdList.length > 0) {
-                        Navigator.of(context).pushNamed(
-                          SC.graphPage,
-                          arguments: {
-                            SC.mbdList: mbdList,
-                            SC.iptList: iptList,
+                        SizedBox(width: (constraints.maxWidth-100).clamp(0.0, 230.0),),
+                        DataContainer(
+                          topChild: const Text('Graph'),
+                          bottomChild: const Hero(
+                            tag: SC.graphHeroTag,
+                            child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Icon(
+                                Icons.graphic_eq,
+                                size: 30.0,
+                              ),
+                            ),
+                          ),
+                          ontap: () {
+                            if (mbdList.length > 0) {
+                              Navigator.of(context).pushNamed(
+                                SC.graphPage,
+                                arguments: {
+                                  SC.mbdList: mbdList,
+                                  SC.iptList: iptList,
+                                },
+                              );
+                            }
                           },
-                        );
-                      }
-                    },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
-              ),
-            ],
+              );
+            }
           ),
         ],
       ),

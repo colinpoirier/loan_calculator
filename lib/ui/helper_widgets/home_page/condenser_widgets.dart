@@ -14,6 +14,7 @@ class Scroller extends SingleChildScrollView {
   Scroller.row({
     this.children,
   }) : super(
+          physics: NeverScrollableScrollPhysics(),
           child: Row(
             children: children,
           ),

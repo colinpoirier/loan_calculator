@@ -57,42 +57,47 @@ class MonthlyPaymentResult extends StatelessWidget {
           const SizedBox(
             height: 10.0,
           ),
-          Scroller.row(
-            children: <Widget>[
-              Column(
+          LayoutBuilder(
+            builder: (context, constraints) {
+              // print(constraints);
+              return Scroller.row(
                 children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    child: const Text(
-                      'Round Up',
-                      style: TextStyle(fontSize: 17),
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        width: 105,
+                        child: const Text(
+                          'Round Up',
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      Checkbox(
+                        value: roundUp,
+                        onChanged: onCheckUp,
+                      )
+                    ],
                   ),
-                  Checkbox(
-                    value: roundUp,
-                    onChanged: onCheckUp,
+                  SizedBox(width: (constraints.maxWidth - 210).clamp(0.0, 65.0)),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.center,
+                        width: 105,
+                        child: const Text(
+                          'Round Down',
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      Checkbox(
+                        value: roundDown,
+                        onChanged: onCheckDown,
+                      ),
+                    ],
                   )
                 ],
-              ),
-              const SizedBox(width: 65.0),
-              Column(
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.center,
-                    width: 100,
-                    child: const Text(
-                      'Round Down',
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                  Checkbox(
-                    value: roundDown,
-                    onChanged: onCheckDown,
-                  ),
-                ],
-              )
-            ],
+              );
+            }
           )
         ],
       ),

@@ -6,21 +6,23 @@ class InputPill extends StatelessWidget {
     this.toDisplay = false,
     this.timeChange,
     this.timeChanged = false,
-    this.hintText,
-    this.errorText,
-    this.leadingText,
-    this.controller,
-    this.validator
+    @required this.hintText,
+    // @required this.errorText,
+    @required this.leadingText,
+    @required this.controller,
+    @required this.validator,
+    @required this.maxWidth
   }) : super(key: key);
 
   final String hintText;
-  final String errorText;
+  // final String errorText;
   final ValueChanged<String> timeChange;
   final String leadingText;
   final bool toDisplay;
   final bool timeChanged;
   final TextEditingController controller;
   final Function(String) validator;
+  final double maxWidth;
 
   Widget displayTimeChange() {
     return Container(
@@ -75,7 +77,7 @@ class InputPill extends StatelessWidget {
       children: <Widget>[
         Container(
           constraints: const BoxConstraints(
-            maxWidth: 135,
+            maxWidth: 140,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -91,25 +93,21 @@ class InputPill extends StatelessWidget {
           ),
         ),
         Container(
-          constraints: const BoxConstraints(
-            maxWidth: 210,
+          constraints: BoxConstraints(
+            maxWidth: (maxWidth - 145).clamp(0.0,215.0),
           ),
           padding: const EdgeInsets.all(3.0),
           child: TextFormField(
             style: const TextStyle(
               fontSize: 22.0,
               height: 1.2,
-              // color: Colors.black,
             ),
             keyboardType: TextInputType.number,
             validator: validator,
             autovalidate: true,
             controller: controller,
             decoration: InputDecoration(
-              // focusedBorder: OutlineInputBorder(
-              //   borderSide: BorderSide(color: Colors.red)
-              // ),
-              errorText: errorText,
+              // errorText: errorText,
               hintText: hintText,
             ),
           ),
