@@ -1,4 +1,4 @@
-package com.example.loan_calc_dev;
+package com.discretepeartree.loan_calc_dev;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
