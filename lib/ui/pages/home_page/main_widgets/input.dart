@@ -17,7 +17,7 @@ class Input extends StatelessWidget {
   final TextEditingController percentController;
   final TextEditingController monthController;
   final GlobalKey formKey;
-  final ValueChanged<String> timeChange;
+  final Function timeChange;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +50,7 @@ class Input extends StatelessWidget {
                         return 'Must be at least 0.01';
                       }
                     }
+                    return null;
                   },
                   controller: amountController,
                 ),
@@ -68,6 +69,7 @@ class Input extends StatelessWidget {
                         return 'Must be at least 0.01';
                       }
                     }
+                    return null;
                   },
                   controller: percentController,
                 ),
@@ -97,6 +99,7 @@ class Input extends StatelessWidget {
                         return 'Not a whole Month';
                       }
                     }
+                    return null;
                   },
                   controller: monthController,
                   timeChange: timeChange,

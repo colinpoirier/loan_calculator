@@ -92,31 +92,61 @@ class ScaleSwitcher extends AnimatedSwitcher {
         );
 }
 
-class ExpandedListView extends Expanded{
+class ExpandedListView extends Expanded {
   final int itemCount;
   final Function(BuildContext, int) itemBuilder;
 
-  ExpandedListView({this.itemCount, this.itemBuilder}):super(
-    child: ListView.builder(
-      itemCount: itemCount,
-      itemBuilder: itemBuilder,
-    )
-  );
+  ExpandedListView({
+    this.itemCount,
+    this.itemBuilder,
+  }) : super(
+          child: ListView.builder(
+            itemCount: itemCount,
+            itemBuilder: itemBuilder,
+          ),
+        );
 }
 
-class PaddedInkWellColumn extends InkWell{
+class PaddedInkWellColumn extends InkWell {
   final VoidCallback onTap;
   final VoidCallback onLongPress;
   final List<Widget> children;
 
-  PaddedInkWellColumn({this.onTap, this.children, this.onLongPress}):super(
-    onTap: onTap,
-    onLongPress: onLongPress,
-    child: Padding(
-      padding: const EdgeInsets.all(18),
-      child: Column(
-        children: children,
+  PaddedInkWellColumn({
+    this.onTap,
+    this.children,
+    this.onLongPress,
+  }) : super(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              children: children,
+            ),
+          ),
+        );
+}
+
+class SizeScaleTransition extends StatelessWidget {
+  const SizeScaleTransition({Key key, this.animation, this.child,}) : super(key: key);
+
+  final Animation<double> animation;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxWidth: 570,
       ),
-    )
-  );
+      child: SizeTransition(
+        sizeFactor: animation,
+        child: ScaleTransition(
+          scale: animation,
+          child: child,
+        ),
+      ),
+    );
+  }
 }

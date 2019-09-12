@@ -4,8 +4,6 @@ import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widge
 class MonthlyPaymentResult extends StatelessWidget {
   const MonthlyPaymentResult({
     Key key,
-    @required this.resultWidth,
-    @required this.resultHeight,
     @required this.expandedDuration,
     @required this.roundUp,
     @required this.roundDown,
@@ -14,8 +12,6 @@ class MonthlyPaymentResult extends StatelessWidget {
     @required this.monthlyPayment,
   }) : super(key: key);
 
-  final double resultWidth;
-  final double resultHeight;
   final Duration expandedDuration;
   final bool roundUp;
   final bool roundDown;
@@ -25,14 +21,9 @@ class MonthlyPaymentResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      constraints: const BoxConstraints(
-        maxWidth: 550,
-      ),
-      curve: Curves.fastOutSlowIn,
-      width: resultWidth,
-      height: resultHeight,
-      duration: expandedDuration,
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 177,
       padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 5.0),
       child: Scroller.column(
         children: <Widget>[

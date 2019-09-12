@@ -7,8 +7,6 @@ import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 class FinalPayment extends StatelessWidget {
   const FinalPayment({
     Key key,
-    @required this.endHeight,
-    @required this.endWidth,
     @required this.expandedDuration,
     @required this.finalPayment,
     @required this.mbdList,
@@ -16,8 +14,6 @@ class FinalPayment extends StatelessWidget {
     @required this.savedIndex,
   }) : super(key: key);
 
-  final double endHeight;
-  final double endWidth;
   final Duration expandedDuration;
   final String finalPayment;
   final List<MonthlyBreakDown> mbdList;
@@ -26,14 +22,9 @@ class FinalPayment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      constraints: const BoxConstraints(
-        maxWidth: 550,
-      ),
-      curve: Curves.fastOutSlowIn,
-      height: endHeight,
-      width: endWidth,
-      duration: expandedDuration,
+    return Container(
+      height: 110,
+      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(10.0),
       child: Scroller.column(
         children: <Widget>[
@@ -45,8 +36,6 @@ class FinalPayment extends StatelessWidget {
           ),
           LayoutBuilder(
             builder: (context, constraints) {
-              // print(MediaQuery.of(context).size);
-              // print(constraints);
               return Scroller.stack(
                 children: <Widget>[
                   ScaleSwitcher(

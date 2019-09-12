@@ -18,15 +18,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   double _counter = 0.0;
   double _amount = 0.0;
   double _percent = 0.0;
   double _months = 0.0;
-  double _resultheight = 0.0;
-  double _resultwidth = 0.0;
-  double _endheight = 0.0;
-  double _endwidth = 0.0;
   double _paymentTemp = 0.0;
   double _finalPaymentTemp = 0.0;
 
@@ -36,7 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   static const Duration expandedDuration = Duration(milliseconds: 300);
 
-  String calChange = '';
+  // String calChange = '';
 
   List<InputTracker> iptList = [];
 
@@ -50,6 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final formKey = GlobalKey<FormState>();
 
+  AnimationController monthAnimationController;
+  AnimationController finalAnimationController;
+  Animation<double> monthlyAnimation;
+  Animation<double> finalAnimation;
+
   @override
   void initState() {
     super.initState();
@@ -60,25 +61,34 @@ class _MyHomePageState extends State<MyHomePage> {
     monthController = TextEditingController()
       ..addListener(() => _monthAdder(monthController.text));
     loadIptList();
+    monthAnimationController =
+        AnimationController(vsync: this, duration: expandedDuration);
+    finalAnimationController =
+        AnimationController(vsync: this, duration: expandedDuration);
+    monthlyAnimation = CurvedAnimation(
+        parent: monthAnimationController, curve: Curves.fastOutSlowIn);
+    finalAnimation = CurvedAnimation(
+        parent: finalAnimationController, curve: Curves.fastOutSlowIn);
   }
 
   @override
   void dispose() {
-    super.dispose();
     amountController.dispose();
     percentController.dispose();
     monthController.dispose();
+    monthAnimationController.dispose();
+    finalAnimationController.dispose();
+    super.dispose();
   }
 
   void _incrementCounter() async {
     bool formValid = formKey?.currentState?.validate() ?? false;
     savedIndex.reset();
     if (_amount == 0.0 || _percent == 0.0 || _months == 0.0 || !formValid) {
+      monthAnimationController.reverse();
+      finalAnimationController.reverse();
       setState(() {
         _counter = 0.0;
-        _resultheight = 0.0;
-        _resultwidth = 0.0;
-        finalPaymentCardShrinker();
         _roundUp = false;
         _roundDown = false;
       });
@@ -89,14 +99,13 @@ class _MyHomePageState extends State<MyHomePage> {
         month: _months,
         percent: _percent,
       ));
+      monthAnimationController.forward();
       setState(() {
-        _resultheight = 177.0;
-        _resultwidth = MediaQuery.of(context).size.width;
         _counter = (_percent * _amount) / (1 - pow((1 + _percent), (-_months)));
         if ((_amount * _percent) >= roundThisDown(_counter) && _roundDown) {
-          ooops(context);
+          ooops();
           _roundDown = false;
-          finalPaymentCardShrinker();
+          finalAnimationController.reverse();
         }
       });
       if (_roundDown || _roundUp) {
@@ -173,38 +182,39 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future ooops(BuildContext context) async {
+  Future ooops() async {
+    final counterTemp = roundThisDown(_counter).toStringAsFixed(2);
+    final interestTemp = (_amount * _percent).toStringAsFixed(5);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: const Text('Oops'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const Text(
+              'Payment would be less than or equal\nto first month\'s interest.',
+              textAlign: TextAlign.center,
             ),
-            title: const Text('Oops'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const Text(
-                  'Payment would be less than or equal\nto first month\'s interest.',
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                    '${roundThisDown(_counter)} ≤ ${(_amount * _percent).toStringAsFixed(5)}')
-              ],
+            const SizedBox(
+              height: 10,
             ),
-            actions: <Widget>[
-              FlatButton(
-                child: const Text(
-                  'Go back',
-                  style: TextStyle(color: Colors.black),
-                ),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          ),
+            Text('$counterTemp ≤ $interestTemp')
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'Go back',
+              style: TextStyle(color: Theme.of(context).textTheme.body1.color),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      ),
     );
   }
 
@@ -218,39 +228,51 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _monthAdder(String val) {
     _months = double.tryParse(val) ?? 0.0;
-    if (_changeTime && calChange == 'Years') {
+  }
+
+  void _yearAdder(String val) {
+    _months = 12 * (double.tryParse(val) ?? 0.0);
+  }
+  // void _monthAdder(String val) {
+  //   _months = double.tryParse(val) ?? 0.0;
+  //   if (_changeTime && calChange == 'Years') {
+  //     _months *= 12;
+  //   }
+  // }
+
+  void _timechange() {
+    setState(() {
+      _changeTime = !_changeTime;
+    });
+    if (_changeTime) {
+      monthController.removeListener(() => _monthAdder);
+      monthController.addListener(() => _yearAdder(monthController.text));
       _months *= 12;
+    } else {
+      monthController.removeListener(() => _yearAdder);
+      monthController.addListener(() => _monthAdder(monthController.text));
+      _months /= 12;
     }
   }
 
-  void _timechange(String value) {
-    calChange = value;
-    if (value == 'Years' && _changeTime == false) {
-      setState(() {
-        _changeTime = true;
-      });
-      if (_months != 0) {
-        _monthAdder((_months).toString());
-      }
-    } else if (value == 'Months' && _changeTime == true) {
-      setState(() {
-        _changeTime = false;
-      });
-      if (_months != 0) {
-        _monthAdder((_months /= 12).toString());
-      }
-    }
-  }
-
-  void finalPaymentCardShrinker() {
-    _endheight = 0.0;
-    _endwidth = 0.0;
-  }
-
-  void finalPaymentCardGrower() {
-    _endheight = 110.0;
-    _endwidth = MediaQuery.of(context).size.width;
-  }
+  // void _timechange(String value) {
+  //   calChange = value;
+  //   if (value == 'Years' && _changeTime == false) {
+  //     setState(() {
+  //       _changeTime = true;
+  //     });
+  //     if (_months != 0) {
+  //       _monthAdder((_months).toString());
+  //     }
+  //   } else if (value == 'Months' && _changeTime == true) {
+  //     setState(() {
+  //       _changeTime = false;
+  //     });
+  //     if (_months != 0) {
+  //       _monthAdder((_months /= 12).toString());
+  //     }
+  //   }
+  // }
 
   void onCheckUp(bool valUp) {
     savedIndex.reset();
@@ -267,9 +289,9 @@ class _MyHomePageState extends State<MyHomePage> {
       _roundDown = valDown;
       _roundUp = false;
       if ((_amount * _percent) >= roundThisDown(_counter) && _roundDown) {
-        ooops(context);
+        ooops();
         _roundDown = false;
-        finalPaymentCardShrinker();
+        finalAnimationController.reverse();
       }
     });
     hi();
@@ -277,10 +299,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void hi() {
     if (_roundDown || _roundUp) {
-      finalPaymentCardGrower();
+      finalAnimationController.forward();
       _paymentTemp = _roundUp ? roundThisUp(_counter) : roundThisDown(_counter);
+      if (_paymentTemp == _counter && _roundUp) _paymentTemp += 0.01;
     } else {
-      finalPaymentCardShrinker();
+      finalAnimationController.reverse();
     }
     amortizer();
   }
@@ -312,24 +335,25 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final themeChange = Provider.of<ThemeProvider>(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       onLongPress: () async {
+        final themeChange = Provider.of<ThemeProvider>(context);
         final isDark = themeChange.getTheme == CalcThemes.darkTheme;
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        await preferences.setBool(SC.themePrefsKey, !isDark);
-        return isDark
-            ? themeChange.setTheme(CalcThemes.lightTheme)
-            : themeChange.setTheme(CalcThemes.darkTheme);
+        await SharedPreferences.getInstance()
+          ..setBool(SC.themePrefsKey, !isDark);
+        themeChange
+            .setTheme(isDark ? CalcThemes.lightTheme : CalcThemes.darkTheme);
       },
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: RoundedAppBar(
           child: Text(
             'LoanCalc',
-            style: theme.textTheme.title
-                .copyWith(fontSize: 40, fontWeight: FontWeight.normal),
+            style: theme.textTheme.title.copyWith(
+              fontSize: 40,
+              fontWeight: FontWeight.normal,
+            ),
           ),
         ),
         body: Center(
@@ -362,27 +386,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              MyCard(
-                child: MonthlyPaymentResult(
-                  resultHeight: _resultheight,
-                  resultWidth: _resultwidth,
-                  expandedDuration: expandedDuration,
-                  roundUp: _roundUp,
-                  roundDown: _roundDown,
-                  onCheckUp: onCheckUp,
-                  onCheckDown: onCheckDown,
-                  monthlyPayment: monthlyPayment(),
+              SizeScaleTransition(
+                animation: monthlyAnimation,
+                child: MyCard(
+                  child: MonthlyPaymentResult(
+                    expandedDuration: expandedDuration,
+                    roundUp: _roundUp,
+                    roundDown: _roundDown,
+                    onCheckUp: onCheckUp,
+                    onCheckDown: onCheckDown,
+                    monthlyPayment: monthlyPayment(),
+                  ),
                 ),
               ),
-              MyCard(
-                child: FinalPayment(
-                  endHeight: _endheight,
-                  endWidth: _endwidth,
-                  expandedDuration: expandedDuration,
-                  finalPayment: finalPayment(),
-                  mbdList: mbdList,
-                  iptList: iptList,
-                  savedIndex: savedIndex,
+              SizeScaleTransition(
+                animation: finalAnimation,
+                child: MyCard(
+                  child: FinalPayment(
+                    expandedDuration: expandedDuration,
+                    finalPayment: finalPayment(),
+                    mbdList: mbdList,
+                    iptList: iptList,
+                    savedIndex: savedIndex,
+                  ),
                 ),
               ),
             ],

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 class InputPill extends StatelessWidget {
-  const InputPill({
-    Key key,
-    this.toDisplay = false,
-    this.timeChange,
-    this.timeChanged = false,
-    @required this.hintText,
-    @required this.leadingText,
-    @required this.controller,
-    @required this.validator,
-    @required this.maxWidth
-  }) : super(key: key);
+  const InputPill(
+      {Key key,
+      this.toDisplay = false,
+      this.timeChange,
+      this.timeChanged = false,
+      @required this.hintText,
+      @required this.leadingText,
+      @required this.controller,
+      @required this.validator,
+      @required this.maxWidth})
+      : super(key: key);
 
   final String hintText;
-  final ValueChanged<String> timeChange;
+  final Function timeChange;
   final String leadingText;
   final bool toDisplay;
   final bool timeChanged;
   final TextEditingController controller;
-  final Function(String) validator;
+  final String Function(String) validator;
   final double maxWidth;
 
   Widget displayTimeChange() {
@@ -43,25 +43,21 @@ class InputPill extends StatelessWidget {
               size: 30.0,
             ),
             elevation: 10.0,
-            onSelected: timeChange,
-            itemBuilder: (context) {
-              return const [
+            onSelected: (_) => timeChange(),
+            itemBuilder: (context) => const [
                 PopupMenuItem<String>(
                   value: 'Months',
-                  child: Align(
-                    alignment: Alignment.center,
+                  child: Center(
                     child: Text('Months'),
                   ),
                 ),
                 PopupMenuItem<String>(
                   value: 'Years',
-                  child: Align(
-                    alignment: Alignment.center,
+                  child: Center(
                     child: Text('Years'),
                   ),
                 ),
-              ];
-            },
+              ],
           ),
         ],
       ),
@@ -80,7 +76,7 @@ class InputPill extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              if(toDisplay) displayTimeChange(),
+              if (toDisplay) displayTimeChange(),
               Text(
                 leadingText,
                 style: const TextStyle(
@@ -92,7 +88,7 @@ class InputPill extends StatelessWidget {
         ),
         Container(
           constraints: BoxConstraints(
-            maxWidth: (maxWidth - 165).clamp(0.0,215.0),
+            maxWidth: (maxWidth - 165).clamp(0.0, 215.0),
           ),
           padding: const EdgeInsets.all(3.0),
           child: TextFormField(
