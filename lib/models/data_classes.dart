@@ -7,6 +7,7 @@ class MonthlyBreakDown {
   double paidPrinc;
   double totPrinc;
   double totInt;
+  bool expanded;
 
   MonthlyBreakDown({
     this.payment,
@@ -15,6 +16,7 @@ class MonthlyBreakDown {
     this.paidPrinc,
     this.totPrinc,
     this.totInt,
+    this.expanded = false,
   });
 
   String toString() => '''paidInt: $paidInt\n

@@ -9,4 +9,5 @@ class SC {
   static const amortHeroTag = 'amort';
   static const inputPrefsKey = 'inputHistory';
   static const themePrefsKey = 'theme';
+  static const precisionPrefsKey = 'precision';
 }

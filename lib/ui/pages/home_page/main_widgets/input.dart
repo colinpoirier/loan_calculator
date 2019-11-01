@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:loan_calc_dev/calculation/calculation.dart';
+import 'package:loan_calc_dev/text_controller/text_controller.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
+import 'package:provider/provider.dart';
 
 class Input extends StatelessWidget {
   const Input({
     Key key,
-    @required this.changeTime,
-    @required this.timeChange,
-    @required this.amountController,
-    @required this.percentController,
-    @required this.monthController,
-    @required this.formKey
+    // @required this.changeTime,
+    // @required this.timeChange,
+    // @required this.amountController,
+    // @required this.percentController,
+    // @required this.monthController,
+    // @required this.formKey
   }) : super(key: key);
 
-  final bool changeTime;
-  final TextEditingController amountController;
-  final TextEditingController percentController;
-  final TextEditingController monthController;
-  final GlobalKey formKey;
-  final Function timeChange;
+  // final bool changeTime;
+  // final TextEditingController amountController;
+  // final TextEditingController percentController;
+  // final TextEditingController monthController;
+  // final GlobalKey formKey;
+  // final Function timeChange;
 
   @override
   Widget build(BuildContext context) {
+    final textController = Provider.of<TextController>(context);
+    final calculation = Provider.of<Calculation>(context);
     return Container(
       width: MediaQuery.of(context).size.width,
       constraints: const BoxConstraints(
@@ -28,7 +33,7 @@ class Input extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(8.0),
       child: Form(
-        key: formKey,
+        key: calculation.formKey,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Column(
@@ -52,7 +57,7 @@ class Input extends StatelessWidget {
                     }
                     return null;
                   },
-                  controller: amountController,
+                  controller: textController.amount,
                 ),
                 InputPill(
                   maxWidth: constraints.maxWidth,
@@ -71,19 +76,19 @@ class Input extends StatelessWidget {
                     }
                     return null;
                   },
-                  controller: percentController,
+                  controller: textController.percent,
                 ),
                 InputPill(
                   maxWidth: constraints.maxWidth,
                   toDisplay: true,
                   leadingText: "Length",
-                  hintText: changeTime ? 'Years' : 'Months',
+                  hintText: calculation.changeTime ? 'Years' : 'Months',
                   validator: (val) {
                     if (val.isNotEmpty) {
                       double months = double.tryParse(val);
                       if (months == null) {
                         return 'Please enter a number';
-                      } else if (changeTime) {
+                      } else if (calculation.changeTime) {
                         if (months > 50){
                           return 'Exceeds 50';
                         } else if (months < (1.0/12.0)){
@@ -101,9 +106,9 @@ class Input extends StatelessWidget {
                     }
                     return null;
                   },
-                  controller: monthController,
-                  timeChange: timeChange,
-                  timeChanged: changeTime,
+                  controller: textController.month,
+                  timeChange: calculation.timechange,
+                  timeChanged: calculation.changeTime,
                 ),
               ],
             );

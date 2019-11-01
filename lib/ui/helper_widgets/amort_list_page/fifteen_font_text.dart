@@ -5,8 +5,11 @@ class FifteenFontText extends Text {
     String data,
   ) : super(
           data,
+          textScaleFactor: 1.0,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
-            fontSize: 15,
+            fontSize: 16,
           ),
         );
 }

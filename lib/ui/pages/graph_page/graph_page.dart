@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/ui/pages/graph_page/graph_painter.dart';
+import 'package:loan_calc_dev/ui/route_generator/route_generator.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
+import 'package:provider/provider.dart';
 
 class GraphPage extends StatelessWidget {
   const GraphPage({
     Key key,
-    @required this.mbdList,
-    @required this.iptList,
+    // @required this.mbdList,
+    // @required this.iptList,
   }) : super(key: key);
 
-  final List mbdList;
-  final List iptList;
+  // final List mbdList;
+  // final List iptList;
 
   final bsList = const <BoxShadow>[
     BoxShadow(offset: Offset(-3.0, 0.0), blurRadius: 1.0, spreadRadius: -2.0, color: Color(0x33000000)),
@@ -21,6 +24,10 @@ class GraphPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final calculation = Provider.of<Calculation>(context, listen: false);
+    final mbdList = calculation.mbdList;
+    final iptList = calculation.iptList;
+    if(mbdList?.isEmpty ?? true) return RouteGenerator.errorPage(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(

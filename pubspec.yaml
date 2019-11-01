@@ -25,7 +25,9 @@ dependencies:
   cupertino_icons: ^0.1.2
   draggable_scrollbar: "0.0.4"
   shared_preferences: "0.5.3+1"
-  provider: "2.0.1"
+  provider: "3.1.0+1"
+  device_preview: "0.2.6"
+  # auto_size_text: "2.1.0"
 
 dev_dependencies:
   flutter_test:

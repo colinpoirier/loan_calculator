@@ -31,7 +31,7 @@ class InputPill extends StatelessWidget {
         alignment: const AlignmentDirectional(0.05, 0.5),
         children: [
           Text(
-            timeChanged ? 'Y' : 'M',
+            timeChanged ? 'Y' : 'M',textScaleFactor: 1.0,
             style: const TextStyle(
               fontSize: 15,
             ),
@@ -43,16 +43,16 @@ class InputPill extends StatelessWidget {
               size: 30.0,
             ),
             elevation: 10.0,
-            onSelected: (_) => timeChange(),
+            onSelected: timeChange,
             itemBuilder: (context) => const [
-                PopupMenuItem<String>(
-                  value: 'Months',
+                PopupMenuItem<bool>(
+                  value: false,
                   child: Center(
                     child: Text('Months'),
                   ),
                 ),
-                PopupMenuItem<String>(
-                  value: 'Years',
+                PopupMenuItem<bool>(
+                  value: true,
                   child: Center(
                     child: Text('Years'),
                   ),
@@ -78,7 +78,7 @@ class InputPill extends StatelessWidget {
             children: <Widget>[
               if (toDisplay) displayTimeChange(),
               Text(
-                leadingText,
+                leadingText,textScaleFactor: 1.0,
                 style: const TextStyle(
                   fontSize: 22.0,
                 ),
@@ -92,8 +92,8 @@ class InputPill extends StatelessWidget {
           ),
           padding: const EdgeInsets.all(3.0),
           child: TextFormField(
-            style: const TextStyle(
-              fontSize: 22.0,
+            style: TextStyle(
+              fontSize: 22.0 / MediaQuery.textScaleFactorOf(context),
               height: 1.2,
             ),
             keyboardType: TextInputType.number,

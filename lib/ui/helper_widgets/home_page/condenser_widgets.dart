@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 
 class Scroller extends SingleChildScrollView {
   final List<Widget> children;
+  final EdgeInsetsGeometry padding;
+  final ScrollPhysics physics;
 
   Scroller.column({
     this.children,
+    this.padding,
+    this.physics
   }) : super(
+          padding: padding,
           child: Column(
             children: children,
           ),
@@ -13,8 +18,10 @@ class Scroller extends SingleChildScrollView {
 
   Scroller.row({
     this.children,
+    this.padding,
+    this.physics
   }) : super(
-          physics: NeverScrollableScrollPhysics(),
+          physics: physics ?? NeverScrollableScrollPhysics(),
           child: Row(
             children: children,
           ),
@@ -23,10 +30,12 @@ class Scroller extends SingleChildScrollView {
 
   Scroller.stack({
     this.children,
+    this.padding,
+    this.physics
   }) : super(
           child: Stack(
             children: children,
-            alignment: Alignment.topCenter,
+            alignment: Alignment.center,
           ),
           scrollDirection: Axis.horizontal,
         );
@@ -92,17 +101,32 @@ class ScaleSwitcher extends AnimatedSwitcher {
         );
 }
 
-class ExpandedListView extends Expanded {
+class ExpandedListViewStack extends Expanded {
   final int itemCount;
   final Function(BuildContext, int) itemBuilder;
+  final Widget positionedDecoration;
+  final Widget bottomDecoration;
+  final EdgeInsets padding;
 
-  ExpandedListView({
+  ExpandedListViewStack({
     this.itemCount,
     this.itemBuilder,
+    this.positionedDecoration,
+    this.bottomDecoration,
+    this.padding
   }) : super(
-          child: ListView.builder(
-            itemCount: itemCount,
-            itemBuilder: itemBuilder,
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              ListView.builder(
+                physics: BouncingScrollPhysics(),
+                padding: padding,
+                itemCount: itemCount,
+                itemBuilder: itemBuilder,
+              ),
+              positionedDecoration,
+              // bottomDecoration,
+            ],
           ),
         );
 }
