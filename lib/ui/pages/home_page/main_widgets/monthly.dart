@@ -8,20 +8,7 @@ import 'package:provider/provider.dart';
 class MonthlyPaymentResult extends StatelessWidget {
   const MonthlyPaymentResult({
     Key key,
-    // @required this.expandedDuration,
-    // @required this.roundUp,
-    // @required this.roundDown,
-    // @required this.onCheckUp,
-    // @required this.onCheckDown,
-    // @required this.monthlyPayment,
   }) : super(key: key);
-
-  // final Duration expandedDuration;
-  // final bool roundUp;
-  // final bool roundDown;
-  // final String monthlyPayment;
-  // final ValueChanged<bool> onCheckUp;
-  // final ValueChanged<bool> onCheckDown;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +19,8 @@ class MonthlyPaymentResult extends StatelessWidget {
       child: Scroller.column(
         children: <Widget>[
           const Text(
-            'Monthly Payment',textScaleFactor: 1.0,
+            'Monthly Payment',
+            textScaleFactor: 1.0,
             softWrap: false,
             style: TextStyle(
               fontSize: 22.0,
@@ -49,16 +37,16 @@ class MonthlyPaymentResult extends StatelessWidget {
                       key: ValueKey(calculation.monthlyPayment()),
                       height: 47,
                       child: Text(
-                        calculation.monthlyPayment(),textScaleFactor: 1.0,
+                        calculation.monthlyPayment(),
+                        textScaleFactor: 1.0,
                         style: TextStyle(
-                          // fontSize: 25,
                           fontSize: getFontSize(
-                              40.0,
-                              MediaQuery.textScaleFactorOf(context),
-                              null,
-                              constraints.maxWidth,
-                              calculation.monthlyPayment(),
-                              TextDirection.ltr),
+                            40.0,
+                            null,
+                            constraints.maxWidth,
+                            calculation.monthlyPayment(),
+                            TextDirection.ltr,
+                          ),
                         ),
                       ),
                     ),
@@ -80,14 +68,15 @@ class MonthlyPaymentResult extends StatelessWidget {
                         alignment: Alignment.center,
                         width: 105,
                         child: const Text(
-                          'Round Up',textScaleFactor: 1.0,
+                          'Round Up',
+                          textScaleFactor: 1.0,
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
                       Consumer<Calculation>(
                         builder: (_, calculation, __) {
                           return Checkbox(
-                            value: calculation.roundUp,
+                            value: calculation.isRoundUp,
                             onChanged: calculation.onCheckUp,
                           );
                         },
@@ -102,14 +91,15 @@ class MonthlyPaymentResult extends StatelessWidget {
                         alignment: Alignment.center,
                         width: 105,
                         child: const Text(
-                          'Round Down',textScaleFactor: 1.0,
+                          'Round Down',
+                          textScaleFactor: 1.0,
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
                       Consumer<Calculation>(
                         builder: (_, calculation, __) {
                           return Checkbox(
-                            value: calculation.roundDown,
+                            value: calculation.isRoundDown,
                             onChanged: calculation.onCheckDown,
                           );
                         },

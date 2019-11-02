@@ -7,20 +7,7 @@ import 'package:provider/provider.dart';
 class Input extends StatelessWidget {
   const Input({
     Key key,
-    // @required this.changeTime,
-    // @required this.timeChange,
-    // @required this.amountController,
-    // @required this.percentController,
-    // @required this.monthController,
-    // @required this.formKey
   }) : super(key: key);
-
-  // final bool changeTime;
-  // final TextEditingController amountController;
-  // final TextEditingController percentController;
-  // final TextEditingController monthController;
-  // final GlobalKey formKey;
-  // final Function timeChange;
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +69,13 @@ class Input extends StatelessWidget {
                   maxWidth: constraints.maxWidth,
                   toDisplay: true,
                   leadingText: "Length",
-                  hintText: calculation.changeTime ? 'Years' : 'Months',
+                  hintText: calculation.isChangeTime ? 'Years' : 'Months',
                   validator: (val) {
                     if (val.isNotEmpty) {
                       double months = double.tryParse(val);
                       if (months == null) {
                         return 'Please enter a number';
-                      } else if (calculation.changeTime) {
+                      } else if (calculation.isChangeTime) {
                         if (months > 50){
                           return 'Exceeds 50';
                         } else if (months < (1.0/12.0)){
@@ -108,7 +95,7 @@ class Input extends StatelessWidget {
                   },
                   controller: textController.month,
                   timeChange: calculation.timechange,
-                  timeChanged: calculation.changeTime,
+                  timeChanged: calculation.isChangeTime,
                 ),
               ],
             );

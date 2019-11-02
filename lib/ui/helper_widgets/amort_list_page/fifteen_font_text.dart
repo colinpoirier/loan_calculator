@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FifteenFontText extends Text {
-  const FifteenFontText(
+class SixteenFontText extends Text {
+  const SixteenFontText(
     String data,
   ) : super(
           data,

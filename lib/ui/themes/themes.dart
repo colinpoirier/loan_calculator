@@ -13,7 +13,6 @@ class CalcThemes {
       fillColor: args[1],
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(30.0),
-        // borderSide: BorderSide(color: Colors.red)
       ),
       contentPadding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
     ),

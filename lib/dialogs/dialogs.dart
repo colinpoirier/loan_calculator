@@ -8,9 +8,14 @@ class ShowDialogs {
 
   void requestFocus() => FocusScope.of(context).requestFocus(FocusNode());
 
-  void ooops(double counter, double amount, double percent, int precision) {    
-    final counterTemp = roundThisDown(counter, precision).toStringAsFixed(precision);
-    final interestTemp = (amount * percent).toStringAsFixed(precision + 3);
+  void ooops(
+    double counter,
+    double interest,
+    int precision,
+  ) {
+    final counterString =
+        roundDown(counter, precision).toStringAsFixed(precision);
+    final interestString = interest.toStringAsFixed(precision + 3);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -28,7 +33,7 @@ class ShowDialogs {
             const SizedBox(
               height: 10,
             ),
-            Text('$counterTemp ≤ $interestTemp')
+            Text('$counterString ≤ $interestString')
           ],
         ),
         actions: <Widget>[
@@ -37,14 +42,18 @@ class ShowDialogs {
               'Go back',
               style: TextStyle(color: Theme.of(context).textTheme.body1.color),
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
           )
         ],
       ),
     );
   }
 
-  void showDeleteConfirm(InputTracker input, BuildContext context, Calculation calculation) {
+  void showDeleteConfirm(
+    InputTracker input,
+    BuildContext context,
+    Calculation calculation,
+  ) {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
@@ -58,14 +67,14 @@ class ShowDialogs {
             child: const Text('Confirm'),
             onPressed: () async {
               calculation.iptList.remove(input);
-              await calculation.saveIptList();
+              await calculation.inputTrackerStorage.saveIptList();
               calculation.update();
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
           FlatButton(
             child: const Text('Cancel'),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
           ),
         ],
       ),

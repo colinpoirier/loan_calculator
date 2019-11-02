@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider3<ShowDialogs, TextController,
             AnimationProvider, Calculation>(
           initialBuilder: (_) => Calculation()
-            ..loadIptList()
-            ..loadPrecision(),
+            ..inputTrackerStorage.loadIptList()
+            ..precisionStorage.loadPrecision(),
           builder: (
             _,
             showDialogs,
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
               calculation
                 ..animationProvider = animationProvider
                 ..textController = textController
-                ..showOoopsDialog = showDialogs,
+                ..showDialogs = showDialogs,
         )
       ],
       child: ThemeApp(),

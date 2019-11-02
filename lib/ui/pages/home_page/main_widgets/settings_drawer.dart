@@ -21,24 +21,6 @@ class SettingsDrawer extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          // Padding(
-          //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-          //   child: Material(
-          //     elevation: 4,
-          //     color: Theme.of(context).primaryColor,
-          //     borderRadius:
-          //         const BorderRadius.vertical(bottom: Radius.circular(30)),
-          //     child: Container(
-          //       height: 56 + MediaQuery.of(context).padding.top,
-          //       alignment: Alignment.bottomCenter,
-          //       padding: const EdgeInsets.only(bottom: 5),
-          //       child: const Icon(
-          //         Icons.settings,
-          //         size: 30,
-          //       ),
-          //     ),
-          //   ),
-          // ),
           MyCard(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +41,8 @@ class SettingsDrawer extends StatelessWidget {
               children: <Widget>[
                 const Text(
                   '.XX',
-                  style: TextStyle(fontSize: 23),
+                  textScaleFactor: 1.0,
+                  style: const TextStyle(fontSize: 23),
                 ),
                 DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
@@ -71,7 +54,8 @@ class SettingsDrawer extends StatelessWidget {
                           (index) => DropdownMenuItem(
                             child: Text(
                               '$index',
-                              style: TextStyle(fontSize: 23),
+                              textScaleFactor: 1.0,
+                              style: const TextStyle(fontSize: 23),
                             ),
                             value: index,
                           ),

@@ -1,53 +1,42 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:loan_calc_dev/calculation/utils.dart';
 import 'package:loan_calc_dev/dialogs/dialogs.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
 import 'package:loan_calc_dev/models/saved_index.dart';
 import 'package:loan_calc_dev/provider/animation_provider.dart';
+import 'package:loan_calc_dev/storage/input_tracker_storage.dart';
+import 'package:loan_calc_dev/storage/precision_storage.dart';
 import 'package:loan_calc_dev/text_controller/text_controller.dart';
-import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class Calculation extends ChangeNotifier{
-
+class Calculation extends ChangeNotifier {
   AnimationProvider animationProvider;
   TextController _textController;
-  ShowDialogs showOoopsDialog;
+  ShowDialogs showDialogs;
 
-  double _counter = 0.0;
+  double _payment = 0.0;
   double _amount = 0.0;
   double _percent = 0.0;
   double _months = 0.0;
-  double _paymentTemp = 0.0;
-  double _finalPaymentTemp = 0.0;
+  double _roundedPayment = 0.0;
+  double _finalPayment = 0.0;
 
-  bool changeTime = false;
-  bool roundUp = false;
-  bool roundDown = false;  
+  bool isChangeTime = false;
+  bool isRoundUp = false;
+  bool isRoundDown = false;
 
-  int _precision;
+  bool get isTooSmall => (_amount * _percent) >= roundDown(_payment, precision);
 
-  int get precision => _precision;
-
-  set precision(int val){
-    _precision = val;
-    // notifyListeners();
-    incrementCounter();
-    savePrecision();
-  }
-
-  set textController(TextController textController){
+  set textController(TextController textController) {
     _textController = textController;
-    _textController.amount = TextEditingController()..addListener(() => _amountAdder(_textController.amount.text));
-    _textController.percent = TextEditingController()..addListener(() => _percentAdder(_textController.percent.text));
-    _textController.month = TextEditingController()..addListener(() => _monthAdder(_textController.month.text));
-
+    _textController.amount = TextEditingController()
+      ..addListener(() => _amountAdder(_textController.amount.text));
+    _textController.percent = TextEditingController()
+      ..addListener(() => _percentAdder(_textController.percent.text));
+    _textController.month = TextEditingController()
+      ..addListener(() => _monthAdder(_textController.month.text));
   }
-
-  List<InputTracker> iptList = [];
 
   final mbdList = <MonthlyBreakDown>[];
 
@@ -55,77 +44,51 @@ class Calculation extends ChangeNotifier{
 
   final formKey = GlobalKey<FormState>();
 
-  void update(){
+  final inputTrackerStorage = InputTrackerStorage();
+
+  List<InputTracker> get iptList => inputTrackerStorage.iptList;
+
+  final precisionStorage = PrecisionStorage();
+
+  int get precision => precisionStorage.precision;
+
+  set precision(int val) {
+    precisionStorage.precision = val;
+    incrementCounter();
+  }
+
+  void update() {
     notifyListeners();
   }
 
   void incrementCounter() async {
-    bool formValid = formKey?.currentState?.validate() ?? false;
+    bool isFormValid = formKey?.currentState?.validate() ?? false;
     savedIndex.reset();
-    if (_amount == 0.0 || _percent == 0.0 || _months == 0.0 || !formValid) {
+    if (_amount == 0.0 || _percent == 0.0 || _months == 0.0 || !isFormValid) {
       animationProvider?.monthAnimationController?.reverse();
       animationProvider?.finalAnimationController?.reverse();
-      // setState(() {
-        _counter = 0.0;
-        roundUp = false;
-        roundDown = false;
-      // });
+      _payment = 0.0;
+      isRoundUp = false;
+      isRoundDown = false;
       notifyListeners();
     } else {
-      showOoopsDialog.requestFocus();
-      await handleAddToInputTracker(InputTracker(
+      showDialogs.requestFocus();
+      await inputTrackerStorage.handleAddToInputTracker(InputTracker(
         amount: _amount,
         month: _months,
         percent: _percent,
       ));
       animationProvider?.monthAnimationController?.forward();
-      // setState(() {
-        _counter = (_percent * _amount) / (1 - pow((1 + _percent), (-_months)));
-        if ((_amount * _percent) >= roundThisDown(_counter, _precision) && roundDown) {
-          showOoopsDialog.ooops(_counter, _amount, _percent, _precision);
-          roundDown = false;
-          animationProvider?.finalAnimationController?.reverse();
-        }
-      // });
-      notifyListeners();
-      if (roundDown || roundUp) {
-        hi();
+      _payment = (_percent * _amount) / (1 - pow((1 + _percent), (-_months)));
+      if (isRoundDown && isTooSmall) {
+        showDialogs.ooops(_payment, _amount * _percent, precision);
+        isRoundDown = false;
+        animationProvider?.finalAnimationController?.reverse();
       }
-    }
-  }
-
-  Future savePrecision() async {
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.setInt(SC.precisionPrefsKey, _precision);
-  }
-
-  void loadPrecision() async {
-    final preferences = await SharedPreferences.getInstance();
-    precision = preferences.getInt(SC.precisionPrefsKey) ?? 2;
-  }
-
-  Future handleAddToInputTracker(InputTracker ipt) async {
-    if (iptList.contains(ipt)) iptList.remove(ipt);
-    iptList.insert(0, ipt);
-    if (iptList.length > 20) iptList.removeLast();
-    await saveIptList();
-  }
-
-  Future saveIptList() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final iptJsonList = iptList.map((ipt) => ipt.toJson()).toList();
-    await preferences.setString(SC.inputPrefsKey, jsonEncode(iptJsonList));
-  }
-
-  void loadIptList() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    final jsonString = preferences.getString(SC.inputPrefsKey);
-    if (jsonString != null) {
-      final json = jsonDecode(jsonString);
-      iptList =
-          json.map<InputTracker>((obj) => InputTracker.fromJson(obj)).toList();
-      // setState(() {});
       notifyListeners();
+      if (isRoundDown || isRoundUp) {
+        paymentRounder();
+      }
     }
   }
 
@@ -137,42 +100,43 @@ class Calculation extends ChangeNotifier{
     double interest = 0.0;
     double temp = 0.0;
     for (int n = 1; n <= _months; n++) {
-      if (_paymentTemp > (amountTemp * _percent)) {
-        if (n == _months || (_amount - princTracker) < (_paymentTemp)) {
+      if (_roundedPayment > (amountTemp * _percent)) {
+        if (n == _months || (_amount - princTracker) < _roundedPayment) {
           interest = amountTemp * _percent;
-          _finalPaymentTemp = _amount - princTracker + interest;
+          _finalPayment = _amount - princTracker + interest;
           intTracker += interest;
-          temp = _finalPaymentTemp - interest;
+          temp = _finalPayment - interest;
           princTracker += temp;
           mbdList.add(MonthlyBreakDown(
-              paidInt: roundToTwo(interest, _precision),
-              month: n,
-              paidPrinc: roundToTwo(temp, _precision),
-              payment: roundToTwo(_finalPaymentTemp, _precision),
-              totPrinc: roundToTwo(princTracker, _precision),
-              totInt: roundToTwo(intTracker, _precision)));
+            paidInt: roundToPrecision(interest, precision),
+            month: n,
+            paidPrinc: roundToPrecision(temp, precision),
+            payment: roundToPrecision(_finalPayment, precision),
+            totPrinc: roundToPrecision(princTracker, precision),
+            totInt: roundToPrecision(intTracker, precision),
+          ));
           break;
         } else {
           interest = amountTemp * _percent;
           intTracker += interest;
-          temp = _paymentTemp - interest;
+          temp = _roundedPayment - interest;
           princTracker += temp;
           amountTemp = amountTemp - temp;
           mbdList.add(MonthlyBreakDown(
-              paidInt: roundToTwo(interest, _precision),
-              month: n,
-              paidPrinc: roundToTwo(temp, _precision),
-              payment: roundToTwo(_paymentTemp, _precision),
-              totPrinc: roundToTwo(princTracker, _precision),
-              totInt: roundToTwo(intTracker, _precision)));
+            paidInt: roundToPrecision(interest, precision),
+            month: n,
+            paidPrinc: roundToPrecision(temp, precision),
+            payment: roundToPrecision(_roundedPayment, precision),
+            totPrinc: roundToPrecision(princTracker, precision),
+            totInt: roundToPrecision(intTracker, precision),
+          ));
         }
       } else {
-        _finalPaymentTemp = 0.0;
+        _finalPayment = 0.0;
         break;
       }
     }
   }
-
 
   void _amountAdder(String val) {
     _amount = double.tryParse(val) ?? 0.0;
@@ -191,18 +155,18 @@ class Calculation extends ChangeNotifier{
   }
 
   void timechange(bool input) {
-    if(changeTime != input){
-      // setState(() {
-      changeTime = input;
-    // });
+    if (isChangeTime != input) {
+      isChangeTime = input;
       notifyListeners();
-      if (changeTime) {
+      if (isChangeTime) {
         _textController?.month?.removeListener(() => _monthAdder);
-        _textController?.month?.addListener(() => _yearAdder(_textController?.month?.text));
+        _textController?.month
+            ?.addListener(() => _yearAdder(_textController?.month?.text));
         _months *= 12;
       } else {
         _textController?.month?.removeListener(() => _yearAdder);
-        _textController?.month?.addListener(() => _monthAdder(_textController?.month?.text));
+        _textController?.month
+            ?.addListener(() => _monthAdder(_textController?.month?.text));
         _months /= 12;
       }
     }
@@ -210,34 +174,32 @@ class Calculation extends ChangeNotifier{
 
   void onCheckUp(bool valUp) {
     savedIndex.reset();
-    // setState(() {
-      roundUp = valUp;
-      roundDown = false;
-    // });
+    isRoundUp = valUp;
+    isRoundDown = false;
     notifyListeners();
-    hi();
+    paymentRounder();
   }
 
   void onCheckDown(bool valDown) {
     savedIndex.reset();
-    // setState(() {
-      roundDown = valDown;
-      roundUp = false;
-      if ((_amount * _percent) >= roundThisDown(_counter, _precision) && roundDown) {
-        showOoopsDialog.ooops(_counter, _amount, _percent, _precision);
-        roundDown = false;
-        animationProvider?.finalAnimationController?.reverse();
-      }
-    // });
+    isRoundDown = valDown;
+    isRoundUp = false;
+    if (isRoundDown && isTooSmall) {
+      showDialogs.ooops(_payment, _amount * _percent, precision);
+      isRoundDown = false;
+      animationProvider?.finalAnimationController?.reverse();
+    }
     notifyListeners();
-    hi();
+    paymentRounder();
   }
 
-  void hi() {
-    if (roundDown || roundUp) {
+  void paymentRounder() {
+    if (isRoundDown || isRoundUp) {
       animationProvider?.finalAnimationController?.forward();
-      _paymentTemp = roundUp ? roundThisUp(_counter, _precision) : roundThisDown(_counter, _precision);
-      if (_paymentTemp == _counter && roundUp) _paymentTemp += 0.01;
+      _roundedPayment = isRoundUp
+          ? roundUp(_payment, precision)
+          : roundDown(_payment, precision);
+      if (_roundedPayment == _payment && isRoundUp) _roundedPayment += 0.01;
     } else {
       animationProvider?.finalAnimationController?.reverse();
     }
@@ -245,19 +207,19 @@ class Calculation extends ChangeNotifier{
   }
 
   String monthlyPayment() {
-    if (roundUp || roundDown) {
-      return _paymentTemp.toStringAsFixed(_precision);
+    if (isRoundUp || isRoundDown) {
+      return _roundedPayment.toStringAsFixed(precision);
     }
-    if (_counter == 0) {
+    if (_payment == 0) {
       return '';
     } else {
-      return _counter.toStringAsFixed(_precision + 3);
+      return _payment.toStringAsFixed(precision + 3);
     }
   }
 
   String finalPayment() {
-    if (roundUp || roundDown) {
-      return _finalPaymentTemp.toStringAsFixed(_precision);
+    if (isRoundUp || isRoundDown) {
+      return _finalPayment.toStringAsFixed(precision);
     }
     return '';
   }

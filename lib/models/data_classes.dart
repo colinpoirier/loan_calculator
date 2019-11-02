@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class MonthlyBreakDown {
-  double payment;
-  int month;
-  double paidInt;
-  double paidPrinc;
-  double totPrinc;
-  double totInt;
+  final double payment;
+  final int month;
+  final double paidInt;
+  final double paidPrinc;
+  final double totPrinc;
+  final double totInt;
   bool expanded;
+  double offset;
 
   MonthlyBreakDown({
     this.payment,
@@ -17,6 +18,7 @@ class MonthlyBreakDown {
     this.totPrinc,
     this.totInt,
     this.expanded = false,
+    this.offset = 0,
   });
 
   String toString() => '''paidInt: $paidInt\n
@@ -38,24 +40,25 @@ class InputTracker {
     this.percent,
   });
 
-  Map toJson() => {
-    'month': this.month,
-    'amount': this.amount,
-    'percent': this.percent
-  };
+  Map<String, double> toJson() => {
+        'month': month,
+        'amount': amount,
+        'percent': percent,
+      };
 
-  static InputTracker fromJson(Map json)=>InputTracker(
-    amount: json['amount'],
-    percent: json['percent'],
-    month: json['month']);
+  static InputTracker fromJson(Map<String, dynamic> json) => InputTracker(
+        amount: json['amount'],
+        percent: json['percent'],
+        month: json['month'],
+      );
 
   bool operator ==(other) =>
       other is InputTracker &&
-      other.amount == this.amount &&
-      other.month == this.month &&
-      other.percent == this.percent;
+      other.amount == amount &&
+      other.month == month &&
+      other.percent == percent;
 
-  int get hashCode => hashList([this.amount, this.month, this.percent]);
+  int get hashCode => hashList([amount, month, percent]);
 
   String toString() => '''month: $month\n
       amount: $amount\n

@@ -7,32 +7,20 @@ import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    
-    // final args = settings.arguments;
 
     switch (settings.name) {
       case SC.homePage:
         return FadeRouteTransition(MyHomePage());
       case SC.graphPage:
-        // if (args is Map) {
           return FadeRouteTransition(
             GraphPage(
-              // mbdList: args[SC.mbdList],
-              // iptList: args[SC.iptList],
             ),
           );
-        // }
-        // return _errorRoute();
       case SC.amortListPage:
-        // if (args is Map) {
           return FadeRouteTransition(
             AmortizerList(
-              // mbdList: args[SC.mbdList],
-              // savedIndex: args[SC.savedIndex],
             ),
           );
-        // }
-        // return _errorRoute();
       default:
         return _errorRoute();
     }

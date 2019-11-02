@@ -104,15 +104,13 @@ class ScaleSwitcher extends AnimatedSwitcher {
 class ExpandedListViewStack extends Expanded {
   final int itemCount;
   final Function(BuildContext, int) itemBuilder;
-  final Widget positionedDecoration;
-  final Widget bottomDecoration;
+  final Widget top;
   final EdgeInsets padding;
 
   ExpandedListViewStack({
     this.itemCount,
     this.itemBuilder,
-    this.positionedDecoration,
-    this.bottomDecoration,
+    this.top,
     this.padding
   }) : super(
           child: Stack(
@@ -124,8 +122,7 @@ class ExpandedListViewStack extends Expanded {
                 itemCount: itemCount,
                 itemBuilder: itemBuilder,
               ),
-              positionedDecoration,
-              // bottomDecoration,
+              top,
             ],
           ),
         );

@@ -8,12 +8,7 @@ import 'package:provider/provider.dart';
 class GraphPage extends StatelessWidget {
   const GraphPage({
     Key key,
-    // @required this.mbdList,
-    // @required this.iptList,
   }) : super(key: key);
-
-  // final List mbdList;
-  // final List iptList;
 
   final bsList = const <BoxShadow>[
     BoxShadow(offset: Offset(-3.0, 0.0), blurRadius: 1.0, spreadRadius: -2.0, color: Color(0x33000000)),
