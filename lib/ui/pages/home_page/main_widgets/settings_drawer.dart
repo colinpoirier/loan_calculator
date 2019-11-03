@@ -16,6 +16,8 @@ class SettingsDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeChange = Provider.of<ThemeProvider>(context);
     final isDark = themeChange.getTheme == CalcThemes.darkTheme;
+    final isPlatformLight =
+        MediaQuery.platformBrightnessOf(context) == Brightness.light;
     return Container(
       height: 200,
       child: Column(
@@ -81,12 +83,15 @@ class SettingsDrawer extends StatelessWidget {
                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   activeColor: Colors.white,
                   inactiveThumbColor: Colors.black,
-                  value: isDark,
+                  value: isPlatformLight ? isDark : true,
                   onChanged: (_) async {
-                    await SharedPreferences.getInstance()
-                      ..setBool(SC.themePrefsKey, !isDark);
-                    themeChange.setTheme(
-                        isDark ? CalcThemes.lightTheme : CalcThemes.darkTheme);
+                    if (isPlatformLight) {
+                      await SharedPreferences.getInstance()
+                        ..setBool(SC.themePrefsKey, !isDark);
+                      themeChange.setTheme(
+                        isDark ? CalcThemes.lightTheme : CalcThemes.darkTheme,
+                      );
+                    }
                   },
                 ),
                 Padding(

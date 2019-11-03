@@ -79,18 +79,9 @@ class ThemeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeProvider>(context);
-    bool themeToggle = theme.getTheme == CalcThemes.lightTheme;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor:
-          themeToggle ? Colors.transparent : Colors.grey[850],
-      systemNavigationBarIconBrightness:
-          themeToggle ? Brightness.dark : Brightness.light,
-      statusBarIconBrightness: themeToggle ? Brightness.dark : Brightness.light,
-    ));
     return MaterialApp(
       // builder: DevicePreview.appBuilder,
       // locale: DevicePreview.of(context).locale,

@@ -3,24 +3,26 @@ import 'package:loan_calc_dev/ui/helper_widgets/rounded_appbar.dart';
 import 'package:loan_calc_dev/ui/pages/amortizer_list_page.dart';
 import 'package:loan_calc_dev/ui/pages/graph_page/graph_page.dart';
 import 'package:loan_calc_dev/ui/pages/home_page/home_page.dart';
+import 'package:loan_calc_dev/ui/pages/home_page/system_brightness.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-
     switch (settings.name) {
       case SC.homePage:
-        return FadeRouteTransition(MyHomePage());
+        return FadeRouteTransition(
+          child: SystemBrightness(
+            child: MyHomePage(),
+          ),
+        );
       case SC.graphPage:
-          return FadeRouteTransition(
-            GraphPage(
-            ),
-          );
+        return FadeRouteTransition(
+          child: GraphPage(),
+        );
       case SC.amortListPage:
-          return FadeRouteTransition(
-            AmortizerList(
-            ),
-          );
+        return FadeRouteTransition(
+          child: AmortizerList(),
+        );
       default:
         return _errorRoute();
     }
@@ -28,7 +30,7 @@ class RouteGenerator {
 
   static Route<dynamic> _errorRoute() {
     return FadeRouteTransition(
-      Scaffold(
+      child: Scaffold(
         appBar: AppBar(),
         body: const Center(
           child: Text('Error'),
@@ -37,7 +39,7 @@ class RouteGenerator {
     );
   }
 
-  static Scaffold errorPage(BuildContext context){
+  static Scaffold errorPage(BuildContext context) {
     return Scaffold(
       appBar: RoundedAppBar(
         leading: IconButton(
@@ -56,21 +58,28 @@ class RouteGenerator {
 class FadeRouteTransition extends PageRouteBuilder {
   final Widget child;
 
-  FadeRouteTransition(
+  FadeRouteTransition({
     this.child,
-  ) : super(
+  }) : super(
           transitionDuration: const Duration(milliseconds: 350),
-          pageBuilder: (BuildContext context, Animation<double> animation,
-              Animation<double> secondaryAnimation) {
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
             return child;
           },
-          transitionsBuilder: (BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              Widget child) {
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
             return FadeTransition(
               opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-                  parent: animation, curve: Curves.fastOutSlowIn)),
+                parent: animation,
+                curve: Curves.fastOutSlowIn,
+              )),
               child: child,
             );
           },
