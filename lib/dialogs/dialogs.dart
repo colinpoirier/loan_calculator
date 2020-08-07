@@ -40,7 +40,7 @@ class ShowDialogs {
           FlatButton(
             child: Text(
               'Go back',
-              style: TextStyle(color: Theme.of(context).textTheme.body1.color),
+              style: TextStyle(color: Theme.of(context).textTheme.bodyText2.color),
             ),
             onPressed: () => Navigator.pop(context),
           )

@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 child: Text(
                   'LoanCalc',
                   textScaleFactor: 1,
-                  style: theme.textTheme.title.copyWith(
+                  style: theme.textTheme.headline6.copyWith(
                     fontSize: 40,
                     fontWeight: FontWeight.normal,
                   ),

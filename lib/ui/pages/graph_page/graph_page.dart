@@ -47,7 +47,7 @@ class GraphPage extends StatelessWidget {
                   child: RepaintBoundary(
                     child: CustomPaint(
                       painter: GraphPainter(
-                        textStyle: theme.textTheme.body1,
+                        textStyle: theme.textTheme.bodyText2,
                         themeBrightness: theme.brightness,
                         mbd: mbdList,
                         ipt: iptList,
