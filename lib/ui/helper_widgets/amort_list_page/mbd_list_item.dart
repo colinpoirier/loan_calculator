@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
 import 'package:loan_calc_dev/provider/animation_provider.dart';
@@ -32,6 +34,15 @@ class _MbdListItemState extends State<MbdListItem> {
 
   int get precision => widget.precision;
 
+  static const titles = <String>[
+    'Month\n',
+    'Payment\n',
+    'Interest\n',
+    'Principal\n',
+    'Total Repaid\n',
+    'Total Interest\n',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -46,41 +57,56 @@ class _MbdListItemState extends State<MbdListItem> {
     _getExpandedWidth();
     _isExpanded = mbdItem.expanded;
     _scrollController = ScrollController(
-      initialScrollOffset:
-          _isExpanded ? mbdItem.offset : 0,
+      initialScrollOffset: _isExpanded ? mbdItem.offset : 0,
     )..addListener(() {
-        if (_isExpanded)
-          mbdItem.offset = _scrollController.offset;
+        mbdItem.offset = _scrollController.offset;
       });
   }
 
   void _getExpandedWidth() {
-    for (String text in _listOfMbdItem) {
+    for (int i = 0; i < 4; i++) {
       final ts = TextSpan(
-        text: text,
         style: TextStyle(
           fontSize: 16,
         ),
+        children: [
+          TextSpan(
+            text: titles[i],
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          TextSpan(
+            text: _listOfMbdItem[i],
+          ),
+        ],
       );
       final tp = TextPainter(
+        textAlign: TextAlign.center,
         text: ts,
         textDirection: TextDirection.ltr,
-        maxLines: 1,
+        maxLines: 2,
       )..layout();
-      _expandedWidth += tp.width;
+      _expandedWidth = math.max(tp.width, _expandedWidth);
     }
+    _expandedWidth *= 4;
+    _expandedWidth += 15;
   }
 
   double _getWidth() {
-    return _isExpanded
-        ? _expandedWidth
-        : collapsedWidth;
+    return _isExpanded ? _expandedWidth : collapsedWidth;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       controller: _scrollController,
       scrollDirection: Axis.horizontal,
       child: MyCard(
@@ -96,73 +122,66 @@ class _MbdListItemState extends State<MbdListItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Flexible(
-                        child: SixteenFontText(
-                          'Month\n${_listOfMbdItem[0]}',
+                      for (int i = 0; i < 4; i++) ...[
+                        Expanded(
+                          child: SixteenFontRichText(
+                            top: titles[i],
+                            bottom: _listOfMbdItem[i],
+                            style: DefaultTextStyle.of(context).style,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        child: SixteenFontText(
-                          'Payment\n${_listOfMbdItem[1]}',
-                        ),
-                      ),
-                      Flexible(
-                        child: SixteenFontText(
-                          'Interest\n${_listOfMbdItem[2]}',
-                        ),
-                      ),
-                      Flexible(
-                        child: SixteenFontText(
-                          'Principal\n${_listOfMbdItem[3]}',
-                        ),
-                      ),
+                        if (i < 3)
+                          const SizedBox(
+                            width: 5,
+                          )
+                      ]
                     ],
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Flexible(
-                        child: SixteenFontText(
-                          'Total Repaid\n${_listOfMbdItem[4]}',
+                      for (int i = 4; i < 6; i++) ...[
+                        Expanded(
+                          child: SixteenFontRichText(
+                            top: titles[i],
+                            bottom: _listOfMbdItem[i],
+                            style: DefaultTextStyle.of(context).style,
+                          ),
                         ),
-                      ),
-                      Flexible(
-                        child: SixteenFontText(
-                          'Total Interest\n${_listOfMbdItem[5]}',
-                        ),
-                      ),
+                        if (i < 5)
+                          const SizedBox(
+                            width: 5,
+                          )
+                      ],
                     ],
                   ),
                 ],
               ),
-              Positioned(
-                right: -10,
-                bottom: -10,
-                child: collapsedWidth < _expandedWidth
-                    ? IconButton(
-                        icon: RotatedBox(
-                          quarterTurns: 3,
-                          child: Icon(
-                            _isExpanded ? Icons.expand_less : Icons.expand_more,
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() => _isExpanded = !_isExpanded);
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.fastOutSlowIn.flipped,
-                          );
-                          mbdItem.expanded = _isExpanded;
-                        },
-                      )
-                    : Container(),
-              )
+              if (collapsedWidth < _expandedWidth)
+                Positioned(
+                  right: -10,
+                  bottom: -10,
+                  child: IconButton(
+                    icon: RotatedBox(
+                      quarterTurns: 3,
+                      child: Icon(
+                        _isExpanded ? Icons.expand_less : Icons.expand_more,
+                      ),
+                    ),
+                    onPressed: () {
+                      setState(() => _isExpanded = !_isExpanded);
+                      _scrollController.animateTo(
+                        0,
+                        duration: const Duration(milliseconds: 100),
+                        curve: Curves.fastOutSlowIn.flipped,
+                      );
+                      mbdItem.expanded = _isExpanded;
+                    },
+                  ),
+                )
             ],
           ),
         ),

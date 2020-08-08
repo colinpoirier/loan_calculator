@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:device_preview/device_preview.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
   final isDark = preferences.getBool(SC.themePrefsKey) ?? false;
   // runApp(DevicePreview(builder:(context)=>MyApp(

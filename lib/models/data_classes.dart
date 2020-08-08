@@ -21,12 +21,7 @@ class MonthlyBreakDown {
     this.offset = 0,
   });
 
-  String toString() => '''paidInt: $paidInt\n
-      payment: $payment\n
-      paidPrinc: $paidPrinc\n
-      month: $month\n
-      totPrinc: $totPrinc\n
-      totInt: $totInt\n''';
+  String toString() => 'paidInt: $paidInt, payment: $payment, paidPrinc: $paidPrinc, month: $month, totPrinc: $totPrinc, totInt: $totInt, isExpanded: $expanded, offset: $offset';
 }
 
 class InputTracker {
