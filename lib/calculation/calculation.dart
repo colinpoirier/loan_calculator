@@ -223,4 +223,11 @@ class Calculation extends ChangeNotifier {
     }
     return '';
   }
+
+  void assignTextControllers(InputTracker input) {
+    _textController.amount.text = '${input.amount}';
+    _textController.percent.text = '${input.percent * 1200}';
+    _textController.month.text =
+        isChangeTime ? '${input.month / 12}' : '${input.month}';
+  }
 }

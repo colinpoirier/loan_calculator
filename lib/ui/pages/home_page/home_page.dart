@@ -43,74 +43,65 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: theme.scaffoldBackgroundColor,
-        body: Stack(
-          children: <Widget>[
-            Center(
-              child: Scroller.column(
-                padding: EdgeInsets.only(
-                  top: 56 + MediaQuery.of(context).padding.top,
-                ),
-                children: <Widget>[
-                  MyCard(
-                    child: Input(),
-                  ),
-                  RaisedButton(
-                    onPressed: () =>
-                        Provider.of<Calculation>(context, listen: false)
-                            .incrementCounter(),
-                    elevation: 4.0,
-                    color: theme.primaryColor,
-                    shape: const StadiumBorder(
-                      side: BorderSide(
-                        color: Colors.black38,
-                      ),
-                    ),
-                    child: const Text(
-                      'CALCULATE',
-                      textScaleFactor: 1,
-                      style: TextStyle(
-                        fontSize: 23.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  SizeScaleTransition(
-                    animation: animation.monthlyAnimation,
-                    child: MyCard(
-                      child: MonthlyPaymentResult(),
-                    ),
-                  ),
-                  SizeScaleTransition(
-                    animation: animation.finalAnimation,
-                    child: MyCard(
-                      child: FinalPayment(),
-                    ),
-                  ),
-                ],
-              ),
+        appBar: RoundedAppBar(
+          leading: FadeOutButton(),
+          child: Text(
+            'LoanCalc',
+            textScaleFactor: 1,
+            style: theme.textTheme.headline6.copyWith(
+              fontSize: 40,
+              fontWeight: FontWeight.normal,
             ),
-            Positioned(
-              top: 0.0,
-              left: 0.0,
-              right: 0.0,
-              height: 56 + MediaQuery.of(context).padding.top,
-              child: RoundedAppBar(
-                leading: FadeOutButton(),
-                child: Text(
-                  'LoanCalc',
-                  textScaleFactor: 1,
-                  style: theme.textTheme.headline6.copyWith(
-                    fontSize: 40,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                trailing: SettingsButton(),
-              ),
-            ),
-          ],
+          ),
+          trailing: SettingsButton(),
         ),
-        drawer: HistoryDrawer(),
+        body: Center(
+          child: Scroller.column(
+            padding: EdgeInsets.only(
+              top: 56 + MediaQuery.of(context).padding.top,
+            ),
+            children: <Widget>[
+              const MyCard(
+                child: Input(),
+              ),
+              RaisedButton(
+                onPressed: () =>
+                    Provider.of<Calculation>(context, listen: false)
+                        .incrementCounter(),
+                elevation: 4.0,
+                color: theme.primaryColor,
+                shape: const StadiumBorder(
+                  side: BorderSide(
+                    color: Colors.black38,
+                  ),
+                ),
+                child: const Text(
+                  'CALCULATE',
+                  textScaleFactor: 1,
+                  style: TextStyle(
+                    fontSize: 23.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              SizeScaleTransition(
+                animation: animation.monthlyAnimation,
+                child: const MyCard(
+                  child: MonthlyPaymentResult(),
+                ),
+              ),
+              SizeScaleTransition(
+                animation: animation.finalAnimation,
+                child: const MyCard(
+                  child: FinalPayment(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        drawer: const HistoryDrawer(),
       ),
     );
   }

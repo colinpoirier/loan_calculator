@@ -1,5 +1,5 @@
-import 'dart:math';
-import 'dart:ui';
+import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
@@ -39,101 +39,77 @@ class GraphPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.rotate(pi / 2);
+    canvas.rotate(math.pi / 2);
 
-    double heightResizer = size.height * .65;
-    double widthResizer = size.width * .85;
+    final heightResizer = size.height * 0.65;
+    final widthResizer = size.width * 0.85;
 
-    int monthLength = mbd.length;
+    final monthLength = mbd.length;
 
-    double offsetter = heightResizer / monthLength;
-    double offsetterPrinc = widthResizer / (ipt.first.amount * 1.1);
-    double length = widthResizer / (mbd[0].payment * 1.1);
+    final offsetter = heightResizer / monthLength;
+    final offsetterPrinc = widthResizer / (ipt.first.amount * 1.1);
+    final length = widthResizer / (mbd[0].payment * 1.1);
 
     canvas.save();
 
     canvas.translate(55, -25);
 
-    final graphLinePaint = Paint()
+    Paint graphLinePaint(Color color) => Paint()
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
+      ..strokeWidth = 4.0
+      ..color = color;
 
     final graphIndexPaint = Paint()
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 2.0;
 
-    //
-    //Paid to Principal
-    //
-    final princPaint = graphLinePaint..color = Colors.blue;
+    final princPaint = graphLinePaint(principalColor);
     final princPath = Path();
-    if (monthLength == 1)
-      canvas.drawPoints(
-          PointMode.points,
-          [Offset((0.5) * offsetter, -length * mbd[0].paidPrinc)],
-          princPaint..strokeWidth = 10);
-
-    for (int i = 1; i < monthLength; i++) {
-      if (i == 1)
-        princPath.moveTo((i - .5) * offsetter, -length * mbd[i - 1].paidPrinc);
-      princPath.lineTo((i + .5) * offsetter, -length * mbd[i].paidPrinc);
-    }
-    canvas.drawPath(princPath, princPaint);
-
-    //
-    //Paid to Interest
-    //
-    final intPaint = graphLinePaint..color = Colors.red;
+    final intPaint = graphLinePaint(interestColor);
     final intPath = Path();
-    if (monthLength == 1)
-      canvas.drawPoints(
-          PointMode.points,
-          [Offset((0.5) * offsetter, -length * mbd[0].paidInt)],
-          intPaint..strokeWidth = 8);
-
-    for (int i = 1; i < monthLength; i++) {
-      if (i == 1)
-        intPath.moveTo((i - .5) * offsetter, -length * mbd[i - 1].paidInt);
-      intPath.lineTo((i + .5) * offsetter, -length * mbd[i].paidInt);
-    }
-    canvas.drawPath(intPath, intPaint);
-
-    //
-    //Total Principal
-    //
-    final totPrincPaint = graphLinePaint..color = Colors.green;
+    final totPrincPaint = graphLinePaint(totalRepaidColor);
     final totPrincPath = Path();
-    if (monthLength == 1)
+    final monthPaint = graphLinePaint(paymentColor);
+    final monthPath = Path();   
+
+    if (monthLength == 1) {
       canvas.drawPoints(
-          PointMode.points,
-          [Offset((0.5) * offsetter, -length * mbd[0].totPrinc)],
-          totPrincPaint..strokeWidth = 6);
-
-    for (int i = 1; i < monthLength; i++) {
-      if (i == 1)
-        totPrincPath.moveTo(
-            (i - .5) * offsetter, -offsetterPrinc * mbd[i - 1].totPrinc);
-      totPrincPath.lineTo(
-          (i + .5) * offsetter, -offsetterPrinc * mbd[i].totPrinc);
+        ui.PointMode.points,
+        [Offset(0.5 * offsetter, -length * mbd[0].paidPrinc)],
+        princPaint..strokeWidth = 10,
+      );
+      canvas.drawPoints(
+        ui.PointMode.points,
+        [Offset(0.5 * offsetter, -length * mbd[0].paidInt)],
+        intPaint..strokeWidth = 8,
+      );
+      canvas.drawPoints(
+        ui.PointMode.points,
+        [Offset(0.5 * offsetter, -length * mbd[0].totPrinc)],
+        totPrincPaint..strokeWidth = 6,
+      );
+      canvas.drawPoints(
+        ui.PointMode.points,
+        [Offset(0.5 * offsetter, -length * mbd[0].payment)],
+        monthPaint,
+      ); 
+    } else {
+      princPath.moveTo(0.5 * offsetter, -length * mbd[0].paidPrinc);
+      intPath.moveTo(0.5 * offsetter, -length * mbd[0].paidInt);
+      totPrincPath.moveTo(0.5 * offsetter, -offsetterPrinc * mbd[0].totPrinc);
+      monthPath.moveTo(0.5 * offsetter, -length * mbd[0].payment);
+      for (int i = 1; i < monthLength; i++) {
+        princPath.lineTo((i + 0.5) * offsetter, -length * mbd[i].paidPrinc);
+        intPath.lineTo((i + 0.5) * offsetter, -length * mbd[i].paidInt);
+        totPrincPath.lineTo((i + 0.5) * offsetter, -offsetterPrinc * mbd[i].totPrinc);    
+        monthPath.lineTo((i + 0.5) * offsetter, -length * mbd[i].payment);
+      }        
+      canvas.drawPath(princPath, princPaint);
+      canvas.drawPath(intPath, intPaint);
+      canvas.drawPath(totPrincPath, totPrincPaint);
+      canvas.drawPath(monthPath, monthPaint);
     }
-    canvas.drawPath(totPrincPath, totPrincPaint);
-
-    //
-    //Monthly Payment
-    //
-    final monthPaint = graphLinePaint..color = Colors.purple;
-    final monthPath = Path();
-    if (monthLength == 1)
-      canvas.drawPoints(PointMode.points,
-          [Offset((0.5) * offsetter, -length * mbd[0].payment)], monthPaint);
-
-    for (int i = 1; i < monthLength; i++) {
-      if (i == 1)
-        monthPath.moveTo((i - .5) * offsetter, -length * mbd[i - 1].payment);
-      monthPath.lineTo((i + .5) * offsetter, -length * mbd[i].payment);
-    }
-    canvas.drawPath(monthPath, monthPaint);
 
     //
     //Left Axis
@@ -144,8 +120,11 @@ class GraphPainter extends CustomPainter {
     }
     for (int i = 1; i <= 10; i++) {
       double dub = moredub * i;
-      canvas.drawLine(Offset(-10, -length * (dub)), Offset(0, -length * (dub)),
-          graphIndexPaint..color = textStyle.color);
+      canvas.drawLine(
+        Offset(-10, -length * dub),
+        Offset(0, -length * dub),
+        graphIndexPaint..color = textStyle.color,
+      );
       textPainter.text = TextSpan(
         text: moredub <= 1
             ? '${dub.toStringAsFixed(2)}'
@@ -156,7 +135,9 @@ class GraphPainter extends CustomPainter {
       textPainter.paint(
         canvas,
         Offset(
-            -textPainter.width - 15, -length * (dub) - textPainter.height / 2),
+          -textPainter.width - 15,
+          -length * dub - textPainter.height / 2,
+        ),
       );
       if (moredub <= 1) break;
     }
@@ -170,20 +151,19 @@ class GraphPainter extends CustomPainter {
     //Bottom Axis
     //
     int modulo = 1;
-    if (monthLength <= 4) {
-      modulo = 1;
-    } else {
+    if (monthLength > 4)  {
       modulo = (monthLength / 10).roundToDouble().toInt();
     }
 
     for (int i = 1; i <= monthLength; i++) {
-      if (i % modulo == 0 && i <= (monthLength * .95).toInt() ||
+      if (i % modulo == 0 && i <= (monthLength * 0.95).toInt() ||
           i == 1 ||
           i == monthLength) {
         canvas.drawLine(
-            Offset(offsetter * ((i) - .5), 10),
-            Offset(offsetter * ((i) - .5), 0),
-            graphIndexPaint..color = textStyle.color);
+          Offset(offsetter * (i - 0.5), 10),
+          Offset(offsetter * (i - 0.5), 0),
+          graphIndexPaint,
+        );
         textPainter.text = TextSpan(
           text: '$i',
           style: textStyle,
@@ -191,8 +171,10 @@ class GraphPainter extends CustomPainter {
         textPainter.layout();
         textPainter.paint(
           canvas,
-          Offset(offsetter * ((i) - .5) - textPainter.width / 2,
-              textPainter.height - 5),
+          Offset(
+            offsetter * (i - 0.5) - textPainter.width / 2,
+            textPainter.height - 5,
+          ),
         );
       }
     }
@@ -212,9 +194,10 @@ class GraphPainter extends CustomPainter {
     for (int i = 1; i <= 10; i++) {
       double dub = moredub * i;
       canvas.drawLine(
-          Offset(heightResizer, -offsetterPrinc * (dub)),
-          Offset(heightResizer + 10, -offsetterPrinc * (dub)),
-          graphIndexPaint..color = totalRepaidColor);
+        Offset(heightResizer, -offsetterPrinc * dub),
+        Offset(heightResizer + 10, -offsetterPrinc * dub),
+        graphIndexPaint..color = totalRepaidColor,
+      );
       textPainter.text = TextSpan(
         text: moredub <= 1
             ? '${dub.toStringAsFixed(2)}'
@@ -225,8 +208,10 @@ class GraphPainter extends CustomPainter {
       textPainter.layout();
       textPainter.paint(
         canvas,
-        Offset((heightResizer + 15),
-            -offsetterPrinc * (dub) - textPainter.height / 2),
+        Offset(
+          heightResizer + 15,
+          -offsetterPrinc * dub - textPainter.height / 2,
+        ),
       );
       if (moredub <= 1) break;
     }
@@ -240,43 +225,50 @@ class GraphPainter extends CustomPainter {
 
     canvas.translate(0, -25);
 
-    textPainter.text =
-        TextSpan(text: 'Payment', style: TextStyle(color: paymentColor));
-    textPainter.textAlign = TextAlign.right;
-    textPainter.layout();
-    textPainter.paint(
+    void paintLegendText(String text, Color textColor, double position) {
+      textPainter.text = TextSpan(
+        text: text,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+      textPainter.textAlign = TextAlign.right;
+      textPainter.layout();
+      textPainter.paint(
         canvas,
-        Offset(size.height - textPainter.width,
-            -widthResizer - textPainter.height / 2));
+        Offset(
+          size.height - textPainter.width,
+          -widthResizer * position - textPainter.height / 2,
+        ),
+      );
+    }
 
-    textPainter.text =
-        TextSpan(text: 'Principal', style: TextStyle(color: principalColor));
-    textPainter.textAlign = TextAlign.right;
-    textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset(size.height - textPainter.width,
-            -widthResizer * 2 / 3 - textPainter.height / 2));
+    paintLegendText(
+      'Payment',
+      paymentColor,
+      1, // 3 / 3
+    );
 
-    textPainter.text =
-        TextSpan(text: 'Interest', style: TextStyle(color: interestColor));
-    textPainter.textAlign = TextAlign.right;
-    textPainter.layout();
-    textPainter.paint(
-        canvas,
-        Offset(size.height - textPainter.width,
-            -widthResizer / 3 - textPainter.height / 2));
+    paintLegendText(
+      'Principal',
+      principalColor,
+      2 / 3,
+    );
 
-    textPainter.text = TextSpan(
-        text: 'Total Repaid', style: TextStyle(color: totalRepaidColor));
-    textPainter.textAlign = TextAlign.right;
-    textPainter.layout();
-    textPainter.paint(canvas,
-        Offset(size.height - textPainter.width, -textPainter.height / 2));
+    paintLegendText(
+      'Interest',
+      interestColor,
+      1 / 3,
+    );
+
+    paintLegendText(
+      'Total Repaid',
+      totalRepaidColor,
+      0,
+    );
   }
 
   @override
-  bool shouldRepaint(GraphPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(GraphPainter oldDelegate) => false;
 }

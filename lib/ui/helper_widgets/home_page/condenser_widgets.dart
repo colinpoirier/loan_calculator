@@ -5,22 +5,16 @@ class Scroller extends SingleChildScrollView {
   final EdgeInsetsGeometry padding;
   final ScrollPhysics physics;
 
-  Scroller.column({
-    this.children,
-    this.padding,
-    this.physics
-  }) : super(
+  Scroller.column({this.children, this.padding, this.physics})
+      : super(
           padding: padding,
           child: Column(
             children: children,
           ),
         );
 
-  Scroller.row({
-    this.children,
-    this.padding,
-    this.physics
-  }) : super(
+  Scroller.row({this.children, this.padding, this.physics})
+      : super(
           physics: physics ?? NeverScrollableScrollPhysics(),
           child: Row(
             children: children,
@@ -28,11 +22,8 @@ class Scroller extends SingleChildScrollView {
           scrollDirection: Axis.horizontal,
         );
 
-  Scroller.stack({
-    this.children,
-    this.padding,
-    this.physics
-  }) : super(
+  Scroller.stack({this.children, this.padding, this.physics})
+      : super(
           child: Stack(
             children: children,
             alignment: Alignment.center,
@@ -101,31 +92,37 @@ class ScaleSwitcher extends AnimatedSwitcher {
         );
 }
 
-class ExpandedListViewStack extends Expanded {
+class ListViewStack extends StatelessWidget {
+  const ListViewStack({
+    Key key,
+    this.itemCount,
+    this.itemBuilder,
+    this.top,
+    this.padding,
+  }) : super(
+          key: key,
+        );
+
   final int itemCount;
   final Function(BuildContext, int) itemBuilder;
   final Widget top;
   final EdgeInsets padding;
 
-  ExpandedListViewStack({
-    this.itemCount,
-    this.itemBuilder,
-    this.top,
-    this.padding
-  }) : super(
-          child: Stack(
-            fit: StackFit.expand,
-            children: <Widget>[
-              ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: padding,
-                itemCount: itemCount,
-                itemBuilder: itemBuilder,
-              ),
-              top,
-            ],
-          ),
-        );
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          padding: padding,
+          itemCount: itemCount,
+          itemBuilder: itemBuilder,
+        ),
+        top,
+      ],
+    );
+  }
 }
 
 class PaddedInkWellColumn extends InkWell {
@@ -150,7 +147,11 @@ class PaddedInkWellColumn extends InkWell {
 }
 
 class SizeScaleTransition extends StatelessWidget {
-  const SizeScaleTransition({Key key, this.animation, this.child,}) : super(key: key);
+  const SizeScaleTransition({
+    Key key,
+    this.animation,
+    this.child,
+  }) : super(key: key);
 
   final Animation<double> animation;
   final Widget child;

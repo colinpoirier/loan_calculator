@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 class MyCard extends StatelessWidget{
 
-  final double elevation;
-  final EdgeInsets margin;
-  final Widget child;
-
-  MyCard({
+  const MyCard({
     Key key,
     this.elevation = 4.0,
     this.margin = const EdgeInsets.all(10.0),
     this.child,
   }):super(key:key);
+
+  final double elevation;
+  final EdgeInsets margin;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {

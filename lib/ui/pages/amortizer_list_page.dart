@@ -58,91 +58,88 @@ class AmortizerListState extends State<AmortizerList> {
     final topPadding = mediaQuery.padding.top;
     if (mbdList?.isEmpty ?? true) return RouteGenerator.errorPage(context);
     return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Stack(
-        children: <Widget>[
-          DraggableScrollbar(
-            scrollThumbBuilder: (
-              Color backgroundColor,
-              Animation<double> thumbAnimation,
-              Animation<double> labelAnimation,
-              double height, {
-              Text labelText,
-              BoxConstraints labelConstraints,
-            }) {
-              return FadeTransition(
-                opacity: thumbAnimation,
-                child: Container(
-                  color: backgroundColor,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      SizedBox(height: height, width: 35),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).primaryColor,
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(0, 2),
-                              color: Color(0xF39E9E9E),
-                            ),
-                          ],
-                        ),
-                        constraints: BoxConstraints.loose(Size(5, 30)),
-                      ),
-                      const SizedBox(width: 2),
-                    ],
-                  ),
-                ),
-              );
-            },
-            controller: scrollController,
-            heightScrollThumb: 81 + topPadding, //56 + 30/2 + 10
-            backgroundColor: Colors.transparent,
-            child: ListView.builder(
-              padding: EdgeInsets.only(
-                top: 66 + topPadding,
-              ), // 56 + 10
-              itemExtent: 121,
-              itemCount: mbdList.length,
-              physics: BouncingScrollPhysics(),
-              controller: scrollController,
-              itemBuilder: (context, index) {
-                final mbdItem = mbdList[index];
-                return MbdListItem(
-                  key: PageStorageKey(index),
-                  width: width,
-                  mbdItem: mbdItem,
-                  precision: precision,
-                );
-              },
-            ),
+      extendBodyBehindAppBar: true,
+      appBar: RoundedAppBar(
+        child: const Hero(
+          tag: SC.amortHeroTag,
+          child: Icon(
+            Icons.format_align_center,
+            size: 30,
           ),
-          Positioned(
-            top: 0.0,
-            left: 0.0,
-            right: 0.0,
-            height: 56 + topPadding,
-            child: RoundedAppBar(
-              child: const Hero(
-                tag: SC.amortHeroTag,
-                child: Icon(
-                  Icons.format_align_center,
-                  size: 30,
-                ),
-              ),
-              leading: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.arrow_back),
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+        ),
+      ),
+      backgroundColor: backgroundColor,
+      body: DraggableScrollbar(
+        scrollThumbBuilder: (
+          Color backgroundColor,
+          Animation<double> thumbAnimation,
+          Animation<double> labelAnimation,
+          double height, {
+          Text labelText,
+          BoxConstraints labelConstraints,
+        }) {
+          return FadeTransition(
+            opacity: thumbAnimation,
+            child: Container(
+              color: backgroundColor,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SizedBox(height: height, width: 35),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).primaryColor,
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 1,
+                          spreadRadius: 1,
+                          offset: Offset(0, 2),
+                          color: Color(0xF39E9E9E),
+                        ),
+                      ],
+                    ),
+                    constraints: BoxConstraints.loose(
+                      const Size(
+                        5,
+                        30,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 2),
+                ],
               ),
             ),
-          )
-        ],
+          );
+        },
+        controller: scrollController,
+        heightScrollThumb: 81 + topPadding, //56 + 30/2 + 10
+        backgroundColor: Colors.transparent,
+        child: ListView.builder(
+          padding: EdgeInsets.only(
+            top: 66 + topPadding,
+          ), // 56 + 10
+          itemExtent: 121,
+          itemCount: mbdList.length,
+          physics: const BouncingScrollPhysics(),
+          controller: scrollController,
+          itemBuilder: (context, index) {
+            final mbdItem = mbdList[index];
+            return MbdListItem(
+              width: width,
+              mbdItem: mbdItem,
+              precision: precision,
+            );
+          },
+        ),
       ),
     );
   }
