@@ -1,0 +1,16 @@
+name: copied_draggable_scrollbar
+description: A scrollbar that can be dragged for quickly navigation through a vertical list.
+version: 0.0.1
+
+environment:
+  sdk: ">=1.19.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
