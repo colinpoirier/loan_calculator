@@ -100,7 +100,7 @@ class InputPill extends StatelessWidget {
             ),
             keyboardType: TextInputType.number,
             validator: validator,
-            autovalidate: true,
+            autovalidateMode: AutovalidateMode.always,
             controller: controller,
             decoration: InputDecoration(
               hintText: hintText,
