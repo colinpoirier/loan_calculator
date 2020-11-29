@@ -57,7 +57,7 @@ class _MbdListItemState extends State<MbdListItem> {
     _getExpandedWidth();
     _isExpanded = mbdItem.expanded;
     _scrollController = ScrollController(
-      initialScrollOffset: _isExpanded ? mbdItem.offset : 0,
+      initialScrollOffset: mbdItem.offset,
     )..addListener(() {
         mbdItem.offset = _scrollController.offset;
       });
@@ -93,8 +93,21 @@ class _MbdListItemState extends State<MbdListItem> {
     _expandedWidth += 15;
   }
 
-  double _getWidth() {
-    return _isExpanded ? _expandedWidth : collapsedWidth;
+  double _getWidth() => _isExpanded ? _expandedWidth : collapsedWidth;
+
+  List<Widget> _getRowText(int start, int end) {
+    return <Widget>[
+      for (int i = start; i < end; i++) ...[
+        Expanded(
+          child: SixteenFontRichText(
+            top: titles[i],
+            bottom: _listOfMbdItem[i],
+            style: DefaultTextStyle.of(context).style,
+          ),
+        ),
+        if (i < end - 1) const SizedBox(width: 5)
+      ]
+    ];
   }
 
   @override
@@ -122,41 +135,11 @@ class _MbdListItemState extends State<MbdListItem> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Row(
-                    children: <Widget>[
-                      for (int i = 0; i < 4; i++) ...[
-                        Expanded(
-                          child: SixteenFontRichText(
-                            top: titles[i],
-                            bottom: _listOfMbdItem[i],
-                            style: DefaultTextStyle.of(context).style,
-                          ),
-                        ),
-                        if (i < 3)
-                          const SizedBox(
-                            width: 5,
-                          )
-                      ]
-                    ],
+                    children: _getRowText(0, 4),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
+                  const SizedBox(height: 5),
                   Row(
-                    children: <Widget>[
-                      for (int i = 4; i < 6; i++) ...[
-                        Expanded(
-                          child: SixteenFontRichText(
-                            top: titles[i],
-                            bottom: _listOfMbdItem[i],
-                            style: DefaultTextStyle.of(context).style,
-                          ),
-                        ),
-                        if (i < 5)
-                          const SizedBox(
-                            width: 5,
-                          )
-                      ],
-                    ],
+                    children: _getRowText(4, 6),
                   ),
                 ],
               ),
@@ -167,9 +150,7 @@ class _MbdListItemState extends State<MbdListItem> {
                   child: IconButton(
                     icon: RotatedBox(
                       quarterTurns: 3,
-                      child: Icon(
-                        _isExpanded ? Icons.expand_less : Icons.expand_more,
-                      ),
+                      child: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
                     ),
                     onPressed: () {
                       setState(() => _isExpanded = !_isExpanded);

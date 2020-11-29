@@ -10,10 +10,25 @@ class GraphPage extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  final bsList = const <BoxShadow>[
-    BoxShadow(offset: Offset(-3.0, 0.0), blurRadius: 1.0, spreadRadius: -2.0, color: Color(0x33000000)),
-    BoxShadow(offset: Offset(-2.0, 0.0), blurRadius: 2.0, spreadRadius: 0.0, color: Color(0x24000000)),
-    BoxShadow(offset: Offset(-1.0, 0.0), blurRadius: 5.0, spreadRadius: 0.0, color: Color(0x1F000000)),
+  static const bsList = <BoxShadow>[
+    BoxShadow(
+      offset: Offset(-3.0, 0.0),
+      blurRadius: 1.0,
+      spreadRadius: -2.0,
+      color: Color(0x33000000),
+    ),
+    BoxShadow(
+      offset: Offset(-2.0, 0.0),
+      blurRadius: 2.0,
+      spreadRadius: 0.0,
+      color: Color(0x24000000),
+    ),
+    BoxShadow(
+      offset: Offset(-1.0, 0.0),
+      blurRadius: 5.0,
+      spreadRadius: 0.0,
+      color: Color(0x1F000000),
+    ),
   ];
 
   @override
@@ -22,7 +37,8 @@ class GraphPage extends StatelessWidget {
     final calculation = Provider.of<Calculation>(context, listen: false);
     final mbdList = calculation.mbdList;
     final iptList = calculation.iptList;
-    if(mbdList?.isEmpty ?? true) return RouteGenerator.errorPage(context);
+    if (mbdList?.isEmpty ?? true)
+      return RouteGenerator.errorPage(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
@@ -34,7 +50,7 @@ class GraphPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: theme.primaryColor,
                   borderRadius: BorderRadius.circular(30.0),
-                  boxShadow: bsList
+                  boxShadow: bsList,
                 ),
                 margin: const EdgeInsets.all(10),
                 child: Container(
@@ -44,46 +60,48 @@ class GraphPage extends StatelessWidget {
                     color: Theme.of(context).inputDecorationTheme.fillColor,
                     borderRadius: BorderRadius.circular(20.0),
                   ),
-                  child: RepaintBoundary(
-                    child: CustomPaint(
-                      painter: GraphPainter(
-                        textStyle: theme.textTheme.bodyText2,
-                        themeBrightness: theme.brightness,
-                        mbd: mbdList,
-                        ipt: iptList,
-                      ),
+                  child: CustomPaint(
+                    painter: GraphPainter(
+                      textStyle: theme.textTheme.bodyText2,
+                      themeBrightness: theme.brightness,
+                      mbd: mbdList,
+                      ipt: iptList,
                     ),
                   ),
                 ),
               ),
             ),
-            Stack(
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  height: double.infinity,
-                  width: 50.0,
-                  decoration: BoxDecoration(
-                    color: theme.primaryColor,
-                    borderRadius: const BorderRadius.horizontal(left: Radius.circular(30)),
-                    boxShadow: bsList
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              height: double.infinity,
+              width: 50.0,
+              decoration: BoxDecoration(
+                color: theme.primaryColor,
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(30),
+                ),
+                boxShadow: bsList,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: IconButton(
+                      onPressed: Navigator.of(context).pop,
+                      icon: const Icon(Icons.arrow_upward),
+                    ),
                   ),
-                  child: const Hero(
+                  const Hero(
                     tag: SC.graphHeroTag,
                     child: Icon(
                       Icons.graphic_eq,
                       size: 30,
                     ),
                   ),
-                ),
-                SafeArea(
-                  minimum: const EdgeInsets.only(top: 10),
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_upward),
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 48),
+                ],
+              ),
             ),
           ],
         ),

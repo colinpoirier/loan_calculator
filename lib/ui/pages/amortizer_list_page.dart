@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+// import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:copied_draggable_scrollbar/copied_draggable_scrollbar.dart';
 import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/models/saved_index.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/amort_list_page/amort_list_page_helper_widgets.dart';
@@ -79,12 +80,12 @@ class AmortizerListState extends State<AmortizerList> {
         scrollThumbBuilder: (
           Color backgroundColor,
           Animation<double> thumbAnimation,
-          Animation<double> labelAnimation,
           double height, {
           Text labelText,
           BoxConstraints labelConstraints,
         }) {
           return FadeTransition(
+            // opacity: AlwaysStoppedAnimation<double>(1),
             opacity: thumbAnimation,
             child: Container(
               color: backgroundColor,
@@ -108,9 +109,9 @@ class AmortizerListState extends State<AmortizerList> {
                       ],
                     ),
                     constraints: BoxConstraints.loose(
-                      const Size(
+                      Size(
                         5,
-                        30,
+                        height,
                       ),
                     ),
                   ),
@@ -121,7 +122,8 @@ class AmortizerListState extends State<AmortizerList> {
           );
         },
         controller: scrollController,
-        heightScrollThumb: 81 + topPadding, //56 + 30/2 + 10
+        heightScrollThumb: 30,
+        topPadding: 56 + topPadding, //56 + 30/2 + 10
         backgroundColor: Colors.transparent,
         child: ListView.builder(
           padding: EdgeInsets.only(
@@ -144,3 +146,4 @@ class AmortizerListState extends State<AmortizerList> {
     );
   }
 }
+

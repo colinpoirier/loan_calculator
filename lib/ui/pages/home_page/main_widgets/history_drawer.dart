@@ -15,7 +15,7 @@ class HistoryDrawer extends StatelessWidget {
     final topPadding = MediaQuery.of(context).padding.top;
     final theme = Theme.of(context);
     final calculation = Provider.of<Calculation>(context);
-    final showDialogs = Provider.of<ShowDialogs>(context,listen: false);
+    final showDialogs = Provider.of<ShowDialogs>(context, listen: false);
     return Drawer(
       elevation: 0,
       child: ListViewStack(
