@@ -70,54 +70,52 @@ class FinalPayment extends StatelessWidget {
                       );
                     },
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        DataContainer(
-                          topChild: const Text(
-                            'List',
-                            textScaleFactor: 1.0,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      DataContainer(
+                        topChild: const Text(
+                          'List',
+                          textScaleFactor: 1.0,
+                        ),
+                        bottomChild: const Hero(
+                          tag: SC.amortHeroTag,
+                          child: Icon(
+                            Icons.format_align_center,
+                            size: 30.0,
                           ),
-                          bottomChild: const Hero(
-                            tag: SC.amortHeroTag,
+                        ),
+                        ontap: () => navigate(
+                          SC.amortListPage,
+                          animation,
+                          context,
+                        ),
+                      ),
+                      SizedBox(
+                        width: (constraints.maxWidth - 100).clamp(0.0, 230.0),
+                      ),
+                      DataContainer(
+                        topChild: const Text(
+                          'Graph',
+                          textScaleFactor: 1.0,
+                        ),
+                        bottomChild: const Hero(
+                          tag: SC.graphHeroTag,
+                          child: RotatedBox(
+                            quarterTurns: 3,
                             child: Icon(
-                              Icons.format_align_center,
+                              Icons.graphic_eq,
                               size: 30.0,
                             ),
                           ),
-                          ontap: () => navigate(
-                            SC.amortListPage,
-                            animation,
-                            context,
-                          ),
                         ),
-                        SizedBox(
-                          width: (constraints.maxWidth - 100).clamp(0.0, 230.0),
+                        ontap: () => navigate(
+                          SC.graphPage,
+                          animation,
+                          context,
                         ),
-                        DataContainer(
-                          topChild: const Text(
-                            'Graph',
-                            textScaleFactor: 1.0,
-                          ),
-                          bottomChild: const Hero(
-                            tag: SC.graphHeroTag,
-                            child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Icon(
-                                Icons.graphic_eq,
-                                size: 30.0,
-                              ),
-                            ),
-                          ),
-                          ontap: () => navigate(
-                            SC.graphPage,
-                            animation,
-                            context,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               );
