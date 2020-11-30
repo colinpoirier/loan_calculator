@@ -31,11 +31,11 @@ class Calculation extends ChangeNotifier {
   set textController(TextController textController) {
     _textController = textController;
     _textController.amount = TextEditingController()
-      ..addListener(() => _amountAdder(_textController.amount.text));
+      ..addListener(_amountAdder);
     _textController.percent = TextEditingController()
-      ..addListener(() => _percentAdder(_textController.percent.text));
+      ..addListener(_percentAdder);
     _textController.month = TextEditingController()
-      ..addListener(() => _monthAdder(_textController.month.text));
+      ..addListener(_monthAdder);
   }
 
   final mbdList = <MonthlyBreakDown>[];
@@ -138,19 +138,23 @@ class Calculation extends ChangeNotifier {
     }
   }
 
-  void _amountAdder(String val) {
+  void _amountAdder() {
+    final String val = _textController.amount.text;
     _amount = double.tryParse(val) ?? 0.0;
   }
 
-  void _percentAdder(String val) {
+  void _percentAdder() {
+    final String val = _textController.percent.text;
     _percent = (double.tryParse(val) ?? 0.0) / 1200;
   }
 
-  void _monthAdder(String val) {
+  void _monthAdder() {
+    final String val = _textController.month.text;
     _months = double.tryParse(val) ?? 0.0;
   }
 
-  void _yearAdder(String val) {
+  void _yearAdder() {
+    final String val = _textController.month.text;
     _months = 12 * (double.tryParse(val) ?? 0.0);
   }
 
@@ -159,14 +163,12 @@ class Calculation extends ChangeNotifier {
       isChangeTime = input;
       notifyListeners();
       if (isChangeTime) {
-        _textController?.month?.removeListener(() => _monthAdder);
-        _textController?.month
-            ?.addListener(() => _yearAdder(_textController?.month?.text));
+        _textController?.month?.removeListener(_monthAdder);
+        _textController?.month?.addListener(_yearAdder);
         _months *= 12;
       } else {
-        _textController?.month?.removeListener(() => _yearAdder);
-        _textController?.month
-            ?.addListener(() => _monthAdder(_textController?.month?.text));
+        _textController?.month?.removeListener(_yearAdder);
+        _textController?.month?.addListener(_monthAdder);
         _months /= 12;
       }
     }
@@ -199,7 +201,11 @@ class Calculation extends ChangeNotifier {
       _roundedPayment = isRoundUp
           ? roundUp(_payment, precision)
           : roundDown(_payment, precision);
-      if (_roundedPayment == _payment && isRoundUp) _roundedPayment += 0.01;
+      // Don't remember the test case that warranted this 
+      // but generalized it for precision
+      if (_roundedPayment == _payment && isRoundUp) {
+        _roundedPayment += 1 / pow(10, precision);
+      }
     } else {
       animationProvider?.finalAnimationController?.reverse();
     }
