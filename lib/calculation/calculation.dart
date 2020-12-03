@@ -85,10 +85,10 @@ class Calculation extends ChangeNotifier {
         isRoundDown = false;
         animationProvider?.finalAnimationController?.reverse();
       }
-      notifyListeners();
       if (isRoundDown || isRoundUp) {
         paymentRounder();
       }
+      notifyListeners();
     }
   }
 
@@ -178,8 +178,8 @@ class Calculation extends ChangeNotifier {
     savedIndex.reset();
     isRoundUp = valUp;
     isRoundDown = false;
-    notifyListeners();
     paymentRounder();
+    notifyListeners();
   }
 
   void onCheckDown(bool valDown) {
@@ -191,8 +191,8 @@ class Calculation extends ChangeNotifier {
       isRoundDown = false;
       animationProvider?.finalAnimationController?.reverse();
     }
-    notifyListeners();
     paymentRounder();
+    notifyListeners();
   }
 
   void paymentRounder() {
@@ -217,7 +217,7 @@ class Calculation extends ChangeNotifier {
       return _roundedPayment.toStringAsFixed(precision);
     }
     if (_payment == 0) {
-      return '';
+      return ' ';
     } else {
       return _payment.toStringAsFixed(precision + 3);
     }
@@ -227,7 +227,7 @@ class Calculation extends ChangeNotifier {
     if (isRoundUp || isRoundDown) {
       return _finalPayment.toStringAsFixed(precision);
     }
-    return '';
+    return ' ';
   }
 
   void assignTextControllers(InputTracker input) {
