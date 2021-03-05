@@ -17,7 +17,7 @@ class CalcThemes {
       contentPadding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
     ),
     toggleableActiveColor: args[4],
-    textSelectionHandleColor: args[5],
+    textSelectionTheme: TextSelectionThemeData(selectionHandleColor: args[5]),
     textTheme: args[6]
     
   );

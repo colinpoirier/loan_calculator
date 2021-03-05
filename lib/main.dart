@@ -34,31 +34,31 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
-          builder: (_) => ThemeProvider(
+          create: (_) => ThemeProvider(
             isDark ? CalcThemes.darkTheme : CalcThemes.lightTheme,
           ),
         ),
         Provider<AnimationProvider>(
-          builder: (_) => AnimationProvider(),
+          create: (_) => AnimationProvider(),
           dispose: (_, animation) {
             animation.dispose();
           },
         ),
         Provider<ShowDialogs>(
-          builder: (_) => ShowDialogs(),
+          create: (_) => ShowDialogs(),
         ),
         Provider<TextController>(
-          builder: (_) => TextController(),
+          create: (_) => TextController(),
           dispose: (_, controller) {
             controller.dispose();
           },
         ),
         ChangeNotifierProxyProvider3<ShowDialogs, TextController,
             AnimationProvider, Calculation>(
-          initialBuilder: (_) => Calculation()
+          create: (_) => Calculation()
             ..inputTrackerStorage.loadIptList()
             ..precisionStorage.loadPrecision(),
-          builder: (
+          update: (
             _,
             showDialogs,
             textController,

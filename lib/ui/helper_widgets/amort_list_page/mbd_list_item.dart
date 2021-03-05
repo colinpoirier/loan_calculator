@@ -129,7 +129,7 @@ class _MbdListItemState extends State<MbdListItem> {
           margin: const EdgeInsets.all(10.0),
           width: _getWidth(),
           child: Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
