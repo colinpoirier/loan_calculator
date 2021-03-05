@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsDrawer extends StatelessWidget {
-  const SettingsDrawer({Key key}) : super(key: key);
+  const SettingsDrawer({Key? key}) : super(key: key);
 
   static const values = <int>[0, 1, 2, 3, 4];
 
@@ -44,7 +44,7 @@ class SettingsDrawer extends StatelessWidget {
                 const Text(
                   '.XX',
                   textScaleFactor: 1.0,
-                  style: const TextStyle(fontSize: 23),
+                  style: TextStyle(fontSize: 23),
                 ),
                 DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
@@ -72,9 +72,9 @@ class SettingsDrawer extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Icon(
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
                     Icons.brightness_5,
                     size: 30,
                   ),
@@ -94,9 +94,9 @@ class SettingsDrawer extends StatelessWidget {
                     }
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Icon(
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
                     Icons.brightness_3,
                     size: 30,
                   ),

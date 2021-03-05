@@ -4,7 +4,7 @@ import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrecisionStorage {
-  int _precision;
+  int _precision = 2;
 
   int get precision => _precision;
 
@@ -20,6 +20,9 @@ class PrecisionStorage {
 
   void loadPrecision() async {
     final preferences = await SharedPreferences.getInstance();
-    _precision = preferences.getInt(SC.precisionPrefsKey) ?? 2;
+    final precision = preferences.getInt(SC.precisionPrefsKey);
+    if (precision != null) {
+      _precision = precision;
+    }
   }
 }

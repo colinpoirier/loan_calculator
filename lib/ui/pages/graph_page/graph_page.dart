@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class GraphPage extends StatelessWidget {
   const GraphPage({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   static const bsList = <BoxShadow>[
@@ -37,7 +37,7 @@ class GraphPage extends StatelessWidget {
     final calculation = Provider.of<Calculation>(context, listen: false);
     final mbdList = calculation.mbdList;
     final iptList = calculation.iptList;
-    if (mbdList?.isEmpty ?? true)
+    if (mbdList.isEmpty)
       return RouteGenerator.errorPage(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -62,7 +62,7 @@ class GraphPage extends StatelessWidget {
                   ),
                   child: CustomPaint(
                     painter: GraphPainter(
-                      textStyle: theme.textTheme.bodyText2,
+                      textStyle: theme.textTheme.bodyText2!,
                       themeBrightness: theme.brightness,
                       mbd: mbdList,
                       ipt: iptList,

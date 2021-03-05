@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class HistoryDrawer extends StatelessWidget {
   const HistoryDrawer({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

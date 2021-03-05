@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class FinalPayment extends StatelessWidget {
   const FinalPayment({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   void navigate(

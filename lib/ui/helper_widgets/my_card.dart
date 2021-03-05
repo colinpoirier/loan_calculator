@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class MyCard extends StatelessWidget{
 
   const MyCard({
-    Key key,
+    Key? key,
     this.elevation = 4.0,
     this.margin = const EdgeInsets.all(10.0),
-    this.child,
+    required this.child,
   }):super(key:key);
 
   final double elevation;

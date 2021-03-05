@@ -5,7 +5,7 @@ import 'package:loan_calc_dev/ui/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 class SystemBrightness extends StatelessWidget {
-  const SystemBrightness({Key key, this.child}) : super(key: key);
+  const SystemBrightness({Key? key, required this.child}) : super(key: key);
 
   final Widget child;
 

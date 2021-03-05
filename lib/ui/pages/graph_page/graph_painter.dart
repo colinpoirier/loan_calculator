@@ -12,18 +12,18 @@ class GraphPainter extends CustomPainter {
   final List<MonthlyBreakDown> mbd;
   final List<InputTracker> ipt;
   final bool isDark;
-  Color paymentColor;
-  Color principalColor;
-  Color interestColor;
-  Color totalRepaidColor;
+  late Color paymentColor;
+  late Color principalColor;
+  late Color interestColor;
+  late Color totalRepaidColor;
 
   GraphPainter({
-    this.themeBrightness,
-    this.textStyle,
-    this.ipt,
-    this.mbd,
+    required this.themeBrightness,
+    required this.textStyle,
+    required this.ipt,
+    required this.mbd,
   })  : linePainter = Paint()
-          ..color = textStyle.color
+          ..color = textStyle.color!
           ..strokeWidth = 4.0
           ..strokeCap = StrokeCap.round,
         textPainter = TextPainter(
@@ -47,8 +47,8 @@ class GraphPainter extends CustomPainter {
     final monthLength = mbd.length;
 
     final offsetter = heightResizer / monthLength;
-    final offsetterPrinc = widthResizer / (ipt.first.amount * 1.1);
-    final length = widthResizer / (mbd[0].payment * 1.1);
+    final offsetterPrinc = widthResizer / (ipt.first.amount* 1.1);
+    final length = widthResizer / (mbd[0].payment* 1.1);
 
     canvas.save();
 
@@ -123,7 +123,7 @@ class GraphPainter extends CustomPainter {
       canvas.drawLine(
         Offset(-10, -length * dub),
         Offset(0, -length * dub),
-        graphIndexPaint..color = textStyle.color,
+        graphIndexPaint..color = textStyle.color!,
       );
       textPainter.text = TextSpan(
         text: moredub <= 1

@@ -3,23 +3,23 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 double roundUp(double val, int precision) {
-  int scale = pow(10, precision);
+  int scale = pow(10, precision) as int;
   return (val * scale).ceilToDouble() / scale;
 }
 
 double roundDown(double val, int precision) {
-  int scale = pow(10, precision);
+  int scale = pow(10, precision) as int;
   return (val * scale).floorToDouble() / scale;
 }
 
 double roundToPrecision(double val, int precision) {
-  int scale = pow(10, precision);
+  int scale = pow(10, precision) as int;
   return (val * scale).roundToDouble() / scale;
 }
 
 double getFontSize(
   double startFont,
-  double height,
+  double? height,
   double maxWidth,
   String monthlyPayment,
   TextDirection textDirection,

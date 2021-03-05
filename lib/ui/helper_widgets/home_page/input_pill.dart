@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 
 class InputPill extends StatelessWidget {
   const InputPill({
-    Key key,
+    Key? key,
     this.toDisplay = false,
     this.timeChange,
     this.timeChanged = false,
-    @required this.hintText,
-    @required this.leadingText,
-    @required this.controller,
-    @required this.validator,
-    @required this.maxWidth,
+    required this.hintText,
+    required this.leadingText,
+    required this.controller,
+    required this.validator,
+    required this.maxWidth,
   }) : super(key: key);
 
   final String hintText;
-  final Function timeChange;
+  final void Function(bool)? timeChange;
   final String leadingText;
   final bool toDisplay;
   final bool timeChanged;
   final TextEditingController controller;
-  final String Function(String) validator;
+  final String? Function(String?) validator;
   final double maxWidth;
 
   Widget displayTimeChange() {

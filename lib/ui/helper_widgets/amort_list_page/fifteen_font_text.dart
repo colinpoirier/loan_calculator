@@ -16,9 +16,9 @@ import 'package:flutter/material.dart';
 
 class SixteenFontRichText extends RichText {
   SixteenFontRichText({
-    this.top,
-    this.bottom,
-    this.style,
+    required this.top,
+    required this.bottom,
+    required this.style,
   }) : super(
           maxLines: 2,
           overflow: TextOverflow.ellipsis,

@@ -6,8 +6,8 @@ class TextController{
   TextEditingController month = TextEditingController();
 
   void dispose(){
-    amount?.dispose();
-    percent?.dispose();
-    month?.dispose();
+    amount.dispose();
+    percent.dispose();
+    month.dispose();
   }
 }

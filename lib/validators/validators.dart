@@ -2,9 +2,9 @@ class Validator {
   static const amountMax = 100000000.0;
   static const amountMin = 0.01;
 
-  static String amount(String val) {
-    if (val.isNotEmpty) {
-      double amount = double.tryParse(val);
+  static String? amount(String? val) {
+    if (val != null && val.isNotEmpty) {
+      double? amount = double.tryParse(val);
       if (amount == null) {
         return 'Please enter a number';
       } else if (amount > amountMax) {
@@ -19,9 +19,9 @@ class Validator {
   static const interestMax = 100.0;
   static const interestMin = 0.01;
 
-  static String interest(String val) {
-    if (val.isNotEmpty) {
-      double percent = double.tryParse(val);
+  static String? interest(String? val) {
+    if (val != null && val.isNotEmpty) {
+      double? percent = double.tryParse(val);
       if (percent == null) {
         return 'Please enter a number';
       } else if (percent > interestMax) {
@@ -39,9 +39,9 @@ class Validator {
   static const yearMin = monthMin / 12;
 
 
-  static String length(String val, bool isChangeTime) {
-    if (val.isNotEmpty) {
-      double months = double.tryParse(val);
+  static String? length(String? val, bool isChangeTime) {
+    if (val != null && val.isNotEmpty) {
+      double? months = double.tryParse(val);
       if (months == null) {
         return 'Please enter a number';
       } else if (isChangeTime) {

@@ -13,7 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  AnimationProvider animation;
+  late AnimationProvider animation;
   @override
   void initState() {
     super.initState();
@@ -27,11 +27,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       duration: AnimationProvider.expandedDuration,
     );
     animation.monthlyAnimation = CurvedAnimation(
-      parent: animation.monthAnimationController,
+      parent: animation.monthAnimationController!,
       curve: Curves.fastOutSlowIn,
     );
     animation.finalAnimation = CurvedAnimation(
-      parent: animation.finalAnimationController,
+      parent: animation.finalAnimationController!,
       curve: Curves.fastOutSlowIn,
     );
   }
@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           child: Text(
             'LoanCalc',
             textScaleFactor: 1,
-            style: theme.textTheme.headline6.copyWith(
+            style: theme.textTheme.headline6!.copyWith(
               fontSize: 40,
               fontWeight: FontWeight.normal,
             ),
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 child: Text(
                   'CALCULATE',
                   textScaleFactor: 1,
-                  style: theme.textTheme.bodyText1.copyWith(
+                  style: theme.textTheme.bodyText1!.copyWith(
                     fontSize: 23.0,
                     fontWeight: FontWeight.bold,
                   ),

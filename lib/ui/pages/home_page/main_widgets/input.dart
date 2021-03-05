@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class Input extends StatelessWidget {
   const Input({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

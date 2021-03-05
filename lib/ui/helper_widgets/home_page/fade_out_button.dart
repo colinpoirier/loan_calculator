@@ -10,7 +10,7 @@ class FadeOutButton extends StatefulWidget {
 
 class _FadeOutButtonState extends State<FadeOutButton>
     with SingleTickerProviderStateMixin {
-  AnimationProvider animationProvider;
+  late AnimationProvider animationProvider;
 
   @override
   void initState() {
@@ -21,7 +21,7 @@ class _FadeOutButtonState extends State<FadeOutButton>
       duration: AnimationProvider.expandedDuration,
     );
     animationProvider.fadeButtonAnimation = CurvedAnimation(
-      parent: animationProvider.fadeButtonController,
+      parent: animationProvider.fadeButtonController!,
       curve: Curves.fastOutSlowIn, 
     );
   }
@@ -40,14 +40,14 @@ class _FadeOutButtonState extends State<FadeOutButton>
 }
 
 class SettingsButton extends StatefulWidget {
-  SettingsButton({Key key}) : super(key: key);
+  SettingsButton({Key? key}) : super(key: key);
 
   _SettingsButtonState createState() => _SettingsButtonState();
 }
 
 class _SettingsButtonState extends State<SettingsButton>
     with SingleTickerProviderStateMixin {
-  AnimationProvider animationProvider;
+  late AnimationProvider animationProvider;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _SettingsButtonState extends State<SettingsButton>
       duration: AnimationProvider.expandedDuration,
     );
     animationProvider.fadeSettingsAnimation = CurvedAnimation(
-      parent: animationProvider.fadeSettingsController,
+      parent: animationProvider.fadeSettingsController!,
       curve: Curves.fastOutSlowIn,
     );
     animationProvider.buttonFade();

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class Scroller extends SingleChildScrollView {
   final List<Widget> children;
-  final EdgeInsetsGeometry padding;
-  final ScrollPhysics physics;
+  final EdgeInsetsGeometry? padding;
+  final ScrollPhysics? physics;
 
-  Scroller.column({this.children, this.padding, this.physics})
+  Scroller.column({required this.children, this.padding, this.physics})
       : super(
           padding: padding,
           child: Column(
@@ -13,7 +13,7 @@ class Scroller extends SingleChildScrollView {
           ),
         );
 
-  Scroller.row({this.children, this.padding, this.physics})
+  Scroller.row({required this.children, this.padding, this.physics})
       : super(
           physics: physics ?? NeverScrollableScrollPhysics(),
           child: Row(
@@ -22,7 +22,7 @@ class Scroller extends SingleChildScrollView {
           scrollDirection: Axis.horizontal,
         );
 
-  Scroller.stack({this.children, this.padding, this.physics})
+  Scroller.stack({required this.children, this.padding, this.physics})
       : super(
           child: Stack(
             children: children,
@@ -38,9 +38,9 @@ class DataContainer extends Container {
   final VoidCallback ontap;
 
   DataContainer({
-    this.topChild,
-    this.bottomChild,
-    this.ontap,
+    required this.topChild,
+    required this.bottomChild,
+    required this.ontap,
   }) : super(
           height: 55,
           child: Stack(
@@ -71,8 +71,8 @@ class ScaleSwitcher extends AnimatedSwitcher {
   final Widget child;
 
   ScaleSwitcher({
-    @required this.duration,
-    this.child,
+    required this.duration,
+    required this.child,
   }) : super(
           duration: duration,
           switchInCurve: Curves.fastOutSlowIn,
@@ -94,11 +94,11 @@ class ScaleSwitcher extends AnimatedSwitcher {
 
 class ListViewStack extends StatelessWidget {
   const ListViewStack({
-    Key key,
-    this.itemCount,
-    this.itemBuilder,
-    this.top,
-    this.padding,
+    Key? key,
+    required this.itemCount,
+    required this.itemBuilder,
+    required this.top,
+    required this.padding,
   }) : super(
           key: key,
         );
@@ -117,7 +117,7 @@ class ListViewStack extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           padding: padding,
           itemCount: itemCount,
-          itemBuilder: itemBuilder,
+          itemBuilder: itemBuilder as Widget Function(BuildContext, int),
         ),
         top,
       ],
@@ -126,13 +126,13 @@ class ListViewStack extends StatelessWidget {
 }
 
 class PaddedInkWellColumn extends InkWell {
-  final VoidCallback onTap;
-  final VoidCallback onLongPress;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final List<Widget> children;
 
   PaddedInkWellColumn({
     this.onTap,
-    this.children,
+    required this.children,
     this.onLongPress,
   }) : super(
           onTap: onTap,
@@ -148,13 +148,13 @@ class PaddedInkWellColumn extends InkWell {
 
 class SizeScaleTransition extends StatelessWidget {
   const SizeScaleTransition({
-    Key key,
+    Key? key,
     this.animation,
     this.child,
   }) : super(key: key);
 
-  final Animation<double> animation;
-  final Widget child;
+  final Animation<double>? animation;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -163,9 +163,9 @@ class SizeScaleTransition extends StatelessWidget {
         maxWidth: 570,
       ),
       child: SizeTransition(
-        sizeFactor: animation,
+        sizeFactor: animation!,
         child: ScaleTransition(
-          scale: animation,
+          scale: animation!,
           child: child,
         ),
       ),

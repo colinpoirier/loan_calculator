@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class AmortizerList extends StatefulWidget {
   const AmortizerList({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -19,9 +19,9 @@ class AmortizerList extends StatefulWidget {
 }
 
 class AmortizerListState extends State<AmortizerList> {
-  ScrollController scrollController;
+  late ScrollController scrollController;
 
-  SavedIndex savedIndex;
+  late SavedIndex savedIndex;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class AmortizerListState extends State<AmortizerList> {
     final mediaQuery = MediaQuery.of(context);
     final width = mediaQuery.size.width;
     final topPadding = mediaQuery.padding.top;
-    if (mbdList?.isEmpty ?? true) return RouteGenerator.errorPage(context);
+    if (mbdList.isEmpty) return RouteGenerator.errorPage(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: RoundedAppBar(
@@ -81,8 +81,8 @@ class AmortizerListState extends State<AmortizerList> {
           Color backgroundColor,
           Animation<double> thumbAnimation,
           double height, {
-          Text labelText,
-          BoxConstraints labelConstraints,
+          Text? labelText,
+          BoxConstraints? labelConstraints,
         }) {
           return FadeTransition(
             // opacity: AlwaysStoppedAnimation<double>(1),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class RoundedAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Widget child;
+  final Widget? child;
   final Widget leading;
-  final Widget trailing;
+  final Widget? trailing;
 
-  const RoundedAppBar({Key key, this.child, this.leading, this.trailing}) : super(key: key);
+  const RoundedAppBar({Key? key, this.child, required this.leading, this.trailing}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(

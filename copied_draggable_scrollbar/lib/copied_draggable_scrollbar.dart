@@ -36,18 +36,16 @@ class DraggableScrollbar extends StatefulWidget {
   final double topPadding;
 
   DraggableScrollbar({
-    Key key,
-    @required this.heightScrollThumb,
-    @required this.backgroundColor,
-    @required this.scrollThumbBuilder,
-    @required this.child,
-    @required this.controller,
+    Key? key,
+    required this.heightScrollThumb,
+    required this.backgroundColor,
+    required this.scrollThumbBuilder,
+    required this.child,
+    required this.controller,
     this.topPadding = 0.0,
     this.scrollbarAnimationDuration = const Duration(milliseconds: 300),
     this.scrollbarTimeToFade = const Duration(milliseconds: 600),
-  })  : assert(controller != null),
-        assert(scrollThumbBuilder != null),
-        assert(child.scrollDirection == Axis.vertical),
+  })  : assert(child.scrollDirection == Axis.vertical),
         super(key: key);
 
   @override
@@ -60,9 +58,9 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
   double _viewOffset = 0.0;
   bool _isDragInProcess = false;
 
-  AnimationController _thumbAnimationController;
-  Animation<double> _thumbAnimation;
-  Timer _fadeoutTimer;
+  late AnimationController _thumbAnimationController;
+  late Animation<double> _thumbAnimation;
+  Timer? _fadeoutTimer;
 
   @override
   void initState() {
@@ -78,7 +76,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
       curve: Curves.fastOutSlowIn,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       if (viewMaxScrollExtent > 0.0 && controller.initialScrollOffset > 0.0) {
         _initOffsetForScrollInitialOffset();
       }
@@ -102,7 +100,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
   ScrollController get controller => widget.controller;
 
   double get barMaxScrollExtent {
-    return context.size.height - widget.heightScrollThumb - widget.topPadding;
+    return context.size!.height - widget.heightScrollThumb - widget.topPadding;
   }
 
   double get barMinScrollExtent => 0.0;
@@ -155,7 +153,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
       }
 
       if (notification is ScrollUpdateNotification) {
-        final double updateAmount = getBarDelta(notification.scrollDelta);
+        final double updateAmount = getBarDelta(notification.scrollDelta!);
         updateBarOffset(updateAmount);
       }
 

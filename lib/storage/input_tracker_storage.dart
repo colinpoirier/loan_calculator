@@ -5,7 +5,7 @@ import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InputTrackerStorage{
-  List<InputTracker> iptList;
+  List<InputTracker> iptList = [];
 
   Future handleAddToInputTracker(InputTracker ipt) async {
     if (iptList.contains(ipt)) iptList.remove(ipt);
@@ -27,8 +27,6 @@ class InputTrackerStorage{
       final json = jsonDecode(jsonString);
       iptList =
           json.map<InputTracker>((obj) => InputTracker.fromJson(obj)).toList();
-    } else {
-      iptList = [];
     }
   }
 }

@@ -11,12 +11,12 @@ class MonthlyBreakDown {
   double offset;
 
   MonthlyBreakDown({
-    this.payment,
-    this.month,
-    this.paidInt,
-    this.paidPrinc,
-    this.totPrinc,
-    this.totInt,
+    required this.payment,
+    required this.month,
+    required this.paidInt,
+    required this.paidPrinc,
+    required this.totPrinc,
+    required this.totInt,
     this.expanded = false,
     this.offset = 0,
   });
@@ -25,17 +25,17 @@ class MonthlyBreakDown {
 }
 
 class InputTracker {
-  double month;
-  double amount;
-  double percent;
+  final double month;
+  final double amount;
+  final double percent;
 
   InputTracker({
-    this.month,
-    this.amount,
-    this.percent,
+    required this.month,
+    required this.amount,
+    required this.percent,
   });
 
-  Map<String, double> toJson() => {
+  Map<String, double?> toJson() => {
         'month': month,
         'amount': amount,
         'percent': percent,

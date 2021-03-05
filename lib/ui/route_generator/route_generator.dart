@@ -48,7 +48,7 @@ class RouteGenerator {
         ),
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
+      body: const Center(
         child: Text('Error'),
       ),
     );
@@ -59,7 +59,7 @@ class FadeRouteTransition extends PageRouteBuilder {
   final Widget child;
 
   FadeRouteTransition({
-    this.child,
+    required this.child,
   }) : super(
           transitionDuration: const Duration(milliseconds: 350),
           pageBuilder: (

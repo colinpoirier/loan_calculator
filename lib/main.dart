@@ -25,9 +25,9 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key key, this.isDark}) : super(key: key);
+  const MyApp({Key? key, this.isDark}) : super(key: key);
 
-  final bool isDark;
+  final bool? isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(
-            isDark ? CalcThemes.darkTheme : CalcThemes.lightTheme,
+            isDark! ? CalcThemes.darkTheme : CalcThemes.lightTheme,
           ),
         ),
         Provider<AnimationProvider>(
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
             animationProvider,
             calculation,
           ) =>
-              calculation
+              calculation!
                 ..animationProvider = animationProvider
                 ..textController = textController
                 ..showDialogs = showDialogs,

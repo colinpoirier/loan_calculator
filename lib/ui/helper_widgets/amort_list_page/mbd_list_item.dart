@@ -8,10 +8,10 @@ import 'package:loan_calc_dev/ui/helper_widgets/my_card.dart';
 
 class MbdListItem extends StatefulWidget {
   const MbdListItem({
-    Key key,
-    @required this.width,
-    @required this.mbdItem,
-    @required this.precision,
+    Key? key,
+    required this.width,
+    required this.mbdItem,
+    required this.precision,
   }) : super(key: key);
 
   final double width;
@@ -23,10 +23,10 @@ class MbdListItem extends StatefulWidget {
 }
 
 class _MbdListItemState extends State<MbdListItem> {
-  bool _isExpanded;
+  late bool _isExpanded;
   double _expandedWidth = 0;
-  List<String> _listOfMbdItem;
-  ScrollController _scrollController;
+  late List<String> _listOfMbdItem;
+  late ScrollController _scrollController;
 
   double get collapsedWidth => widget.width - 40;
 
@@ -93,7 +93,7 @@ class _MbdListItemState extends State<MbdListItem> {
     _expandedWidth += 15;
   }
 
-  double _getWidth() => _isExpanded ? _expandedWidth : collapsedWidth;
+  double _getWidth() => _isExpanded? _expandedWidth : collapsedWidth;
 
   List<Widget> _getRowText(int start, int end) {
     return <Widget>[
@@ -150,7 +150,7 @@ class _MbdListItemState extends State<MbdListItem> {
                   child: IconButton(
                     icon: RotatedBox(
                       quarterTurns: 3,
-                      child: Icon(_isExpanded ? Icons.expand_less : Icons.expand_more),
+                      child: Icon(_isExpanded? Icons.expand_less : Icons.expand_more),
                     ),
                     onPressed: () {
                       setState(() => _isExpanded = !_isExpanded);

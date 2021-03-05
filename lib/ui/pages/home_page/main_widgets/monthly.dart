@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class MonthlyPaymentResult extends StatelessWidget {
   const MonthlyPaymentResult({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

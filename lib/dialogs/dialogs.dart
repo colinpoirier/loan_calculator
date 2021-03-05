@@ -4,9 +4,9 @@ import 'package:loan_calc_dev/calculation/utils.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
 
 class ShowDialogs {
-  BuildContext context;
+  late BuildContext context;
 
-  void requestFocus() => FocusScope.of(context).requestFocus(FocusNode());
+  void unFocus() => FocusScope.of(context).unfocus();
 
   void ooops(
     double counter,
@@ -40,7 +40,7 @@ class ShowDialogs {
           TextButton(
             child: Text(
               'Go back',
-              style: TextStyle(color: Theme.of(context).textTheme.bodyText2.color),
+              style: TextStyle(color: Theme.of(context).textTheme.bodyText2!.color),
             ),
             onPressed: () => Navigator.pop(context),
           )
