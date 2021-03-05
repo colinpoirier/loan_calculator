@@ -49,8 +49,8 @@ class SettingsDrawer extends StatelessWidget {
                 DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
                     value: Provider.of<Calculation>(context).precision,
-                    onChanged: (val) =>
-                        Provider.of<Calculation>(context).precision = val,
+                    onChanged: (val) async =>
+                       await Provider.of<Calculation>(context, listen: false).setPrecision(val),
                     items: values
                         .map(
                           (index) => DropdownMenuItem(

@@ -52,8 +52,8 @@ class Calculation extends ChangeNotifier {
 
   int get precision => precisionStorage.precision;
 
-  set precision(int val) {
-    precisionStorage.precision = val;
+  Future setPrecision(int val) async {
+    await precisionStorage.setPrecision(val);
     incrementCounter();
   }
 

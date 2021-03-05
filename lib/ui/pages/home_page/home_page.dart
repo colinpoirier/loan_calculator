@@ -66,21 +66,21 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               const MyCard(
                 child: Input(),
               ),
-              RaisedButton(
-                onPressed: () =>
-                    Provider.of<Calculation>(context, listen: false)
-                        .incrementCounter(),
-                elevation: 4.0,
-                color: theme.primaryColor,
-                shape: const StadiumBorder(
-                  side: BorderSide(
-                    color: Colors.black38,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 4.0,
+                  primary: theme.primaryColor,
+                  shape: const StadiumBorder(
+                    side: BorderSide(
+                      color: Colors.black38,
+                    ),
                   ),
                 ),
-                child: const Text(
+                onPressed: Provider.of<Calculation>(context, listen: false).incrementCounter,
+                child: Text(
                   'CALCULATE',
                   textScaleFactor: 1,
-                  style: TextStyle(
+                  style: theme.textTheme.bodyText1.copyWith(
                     fontSize: 23.0,
                     fontWeight: FontWeight.bold,
                   ),

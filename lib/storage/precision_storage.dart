@@ -8,9 +8,9 @@ class PrecisionStorage {
 
   int get precision => _precision;
 
-  set precision(int val) {
+  Future setPrecision(int val) async {
     _precision = val;
-    savePrecision();
+    await savePrecision();
   }
 
   Future savePrecision() async {

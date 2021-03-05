@@ -37,7 +37,7 @@ class ShowDialogs {
           ],
         ),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(
               'Go back',
               style: TextStyle(color: Theme.of(context).textTheme.bodyText2.color),
@@ -63,7 +63,7 @@ class ShowDialogs {
         elevation: 0,
         title: const Text('Delete?'),
         children: <Widget>[
-          FlatButton(
+          TextButton(
             child: const Text('Confirm'),
             onPressed: () async {
               calculation.iptList.remove(input);
@@ -72,7 +72,7 @@ class ShowDialogs {
               Navigator.pop(context);
             },
           ),
-          FlatButton(
+          TextButton(
             child: const Text('Cancel'),
             onPressed: () => Navigator.pop(context),
           ),
