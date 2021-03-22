@@ -11,9 +11,20 @@ import 'package:loan_calc_dev/storage/precision_storage.dart';
 import 'package:loan_calc_dev/text_controller/text_controller.dart';
 
 class Calculation extends ChangeNotifier {
-  late AnimationProvider animationProvider;
-  late TextController _textController;
-  late ShowDialogs showDialogs;
+  Calculation({
+    required this.animationProvider,
+    required this.textController,
+    required this.showDialogs,
+  }) {
+    textController
+      ..amount.addListener(_amountAdder)
+      ..percent.addListener(_percentAdder)
+      ..month.addListener(_monthAdder);
+  }
+
+  final AnimationProvider animationProvider;
+  final TextController textController;
+  final ShowDialogs showDialogs;
 
   double _payment = 0.0;
   double _amount = 0.0;
@@ -27,16 +38,6 @@ class Calculation extends ChangeNotifier {
   bool isRoundDown = false;
 
   bool get isTooSmall => (_amount * _percent) >= roundDown(_payment, precision);
-
-  set textController(TextController textController) {
-    _textController = textController;
-    _textController.amount = TextEditingController()
-      ..addListener(_amountAdder);
-    _textController.percent = TextEditingController()
-      ..addListener(_percentAdder);
-    _textController.month = TextEditingController()
-      ..addListener(_monthAdder);
-  }
 
   final mbdList = <MonthlyBreakDown>[];
 
@@ -80,12 +81,12 @@ class Calculation extends ChangeNotifier {
       ));
       animationProvider.monthAnimationController?.forward();
       _payment = (_percent * _amount) / (1 - pow((1 + _percent), (-_months)));
-      if (isRoundDown&& isTooSmall) {
+      if (isRoundDown && isTooSmall) {
         showDialogs.ooops(_payment, _amount * _percent, precision);
         isRoundDown = false;
         animationProvider.finalAnimationController?.reverse();
       }
-      if (isRoundDown|| isRoundUp) {
+      if (isRoundDown || isRoundUp) {
         paymentRounder();
       }
       notifyListeners();
@@ -139,22 +140,22 @@ class Calculation extends ChangeNotifier {
   }
 
   void _amountAdder() {
-    final String val = _textController.amount.text;
+    final String val = textController.amount.text;
     _amount = double.tryParse(val) ?? 0.0;
   }
 
   void _percentAdder() {
-    final String val = _textController.percent.text;
+    final String val = textController.percent.text;
     _percent = (double.tryParse(val) ?? 0.0) / 1200;
   }
 
   void _monthAdder() {
-    final String val = _textController.month.text;
+    final String val = textController.month.text;
     _months = double.tryParse(val) ?? 0.0;
   }
 
   void _yearAdder() {
-    final String val = _textController.month.text;
+    final String val = textController.month.text;
     _months = 12 * (double.tryParse(val) ?? 0.0);
   }
 
@@ -163,12 +164,12 @@ class Calculation extends ChangeNotifier {
       isChangeTime = input;
       notifyListeners();
       if (isChangeTime) {
-        _textController.month.removeListener(_monthAdder);
-        _textController.month.addListener(_yearAdder);
+        textController.month.removeListener(_monthAdder);
+        textController.month.addListener(_yearAdder);
         _months *= 12;
       } else {
-        _textController.month.removeListener(_yearAdder);
-        _textController.month.addListener(_monthAdder);
+        textController.month.removeListener(_yearAdder);
+        textController.month.addListener(_monthAdder);
         _months /= 12;
       }
     }
@@ -186,7 +187,7 @@ class Calculation extends ChangeNotifier {
     savedIndex.reset();
     isRoundDown = valDown!;
     isRoundUp = false;
-    if (isRoundDown&& isTooSmall) {
+    if (isRoundDown && isTooSmall) {
       showDialogs.ooops(_payment, _amount * _percent, precision);
       isRoundDown = false;
       animationProvider.finalAnimationController?.reverse();
@@ -196,11 +197,10 @@ class Calculation extends ChangeNotifier {
   }
 
   void paymentRounder() {
-    if (isRoundDown|| isRoundUp) {
+    if (isRoundDown || isRoundUp) {
       animationProvider.finalAnimationController?.forward();
-      _roundedPayment = isRoundUp? roundUp(_payment, precision)
-          : roundDown(_payment, precision);
-      // Don't remember the test case that warranted this 
+      _roundedPayment = isRoundUp ? roundUp(_payment, precision) : roundDown(_payment, precision);
+      // Don't remember the test case that warranted this
       // but generalized it for precision
       if (_roundedPayment == _payment && isRoundUp) {
         _roundedPayment += 1 / pow(10, precision);
@@ -212,27 +212,26 @@ class Calculation extends ChangeNotifier {
   }
 
   String monthlyPayment() {
-    if (isRoundUp|| isRoundDown) {
+    if (isRoundUp || isRoundDown) {
       return _roundedPayment.toStringAsFixed(precision);
     }
     if (_payment == 0) {
       return '';
     } else {
-      return _payment.toStringAsFixed(precision+ 3);
+      return _payment.toStringAsFixed(precision + 3);
     }
   }
 
   String finalPayment() {
-    if (isRoundUp|| isRoundDown) {
+    if (isRoundUp || isRoundDown) {
       return _finalPayment.toStringAsFixed(precision);
     }
     return '';
   }
 
   void assignTextControllers(InputTracker input) {
-    _textController.amount.text = '${input.amount}';
-    _textController.percent.text = '${input.percent* 1200}';
-    _textController.month.text =
-        isChangeTime ? '${input.month/ 12}' : '${input.month}';
+    textController.amount.text = '${input.amount}';
+    textController.percent.text = '${input.percent * 1200}';
+    textController.month.text = isChangeTime ? '${input.month / 12}' : '${input.month}';
   }
 }

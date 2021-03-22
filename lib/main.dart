@@ -20,14 +20,14 @@ Future main() async {
   //       isDark: isDark,
   //     )));
   runApp(MyApp(
-        isDark: isDark,
-      ));
+    isDark: isDark,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, this.isDark}) : super(key: key);
+  const MyApp({Key? key, required this.isDark}) : super(key: key);
 
-  final bool? isDark;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(
-            isDark! ? CalcThemes.darkTheme : CalcThemes.lightTheme,
+            isDark ? CalcThemes.darkTheme : CalcThemes.lightTheme,
           ),
         ),
         Provider<AnimationProvider>(
@@ -53,23 +53,30 @@ class MyApp extends StatelessWidget {
             controller.dispose();
           },
         ),
-        ChangeNotifierProxyProvider3<ShowDialogs, TextController,
-            AnimationProvider, Calculation>(
-          create: (_) => Calculation()
-            ..inputTrackerStorage.loadIptList()
-            ..precisionStorage.loadPrecision(),
-          update: (
-            _,
-            showDialogs,
-            textController,
-            animationProvider,
-            calculation,
-          ) =>
-              calculation!
-                ..animationProvider = animationProvider
-                ..textController = textController
-                ..showDialogs = showDialogs,
-        )
+        ChangeNotifierProvider(
+          create: (context) => Calculation(
+            animationProvider: context.read<AnimationProvider>(),
+            textController: context.read<TextController>(),
+            showDialogs: context.read<ShowDialogs>(),
+          )..inputTrackerStorage.loadIptList()..precisionStorage.loadPrecision(),
+        ),
+        // ChangeNotifierProxyProvider3<ShowDialogs, TextController,
+        //     AnimationProvider, Calculation>(
+        //   create: (_) => Calculation()
+        //     ..inputTrackerStorage.loadIptList()
+        //     ..precisionStorage.loadPrecision(),
+        //   update: (
+        //     _,
+        //     showDialogs,
+        //     textController,
+        //     animationProvider,
+        //     calculation,
+        //   ) =>
+        //       calculation!
+        //         ..animationProvider = animationProvider
+        //         ..textController = textController
+        //         ..showDialogs = showDialogs,
+        // )
       ],
       child: ThemeApp(),
     );
