@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/dialogs/dialogs.dart';
+import 'package:loan_calc_dev/state_management/input_notifier/input_notifier.dart';
+import 'package:loan_calc_dev/storage/input_tracker/input_tracker_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/condenser_widgets.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/my_card.dart';
 import 'package:provider/provider.dart';
@@ -14,20 +15,21 @@ class HistoryDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
     final theme = Theme.of(context);
-    final calculation = Provider.of<Calculation>(context);
-    final showDialogs = Provider.of<ShowDialogs>(context, listen: false);
+    final inputTrackerNotifier = Provider.of<InputTrackerNotifier>(context);
+    final inputNotifier = Provider.of<InputNotifier>(context);
     return Drawer(
       elevation: 0,
       child: ListViewStack(
         padding: EdgeInsets.only(top: 56 + topPadding),
-        itemCount: calculation.iptList.length,
+        itemCount: inputTrackerNotifier.iptList.length,
         itemBuilder: (context, index) {
-          final input = calculation.iptList[index];
+          final input = inputTrackerNotifier.iptList[index];
           return MyCard(
             child: PaddedInkWellColumn(
-              onLongPress: () => showDialogs.showDeleteConfirm(input, context, calculation),
+              onLongPress: () => ShowDialogs.showDeleteConfirm(input, context, inputTrackerNotifier),
               onTap: () {
-                calculation.assignTextControllers(input);
+                // calculation.assignTextControllers(input);
+                inputNotifier.setControllerInputs(input);
                 Navigator.of(context).pop();
               },
               children: <Widget>[

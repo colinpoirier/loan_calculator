@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/calculation/utils.dart';
-import 'package:loan_calc_dev/provider/animation_provider.dart';
+import 'package:loan_calc_dev/convience_classes/animation_provider.dart';
+import 'package:loan_calc_dev/state_management/final_notifier/final_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:provider/provider.dart';
@@ -13,19 +13,17 @@ class FinalPayment extends StatelessWidget {
 
   void navigate(
     String page,
-    AnimationProvider animation,
     BuildContext context,
   ) {
-    animation.cancelTimer();
     Navigator.pushNamed(
       context,
       page,
-    ).then((_) => animation.buttonFade());
+      arguments: context.read<FinalNotifier>().state.mbdList,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final animation = Provider.of<AnimationProvider>(context, listen: false);
     return Container(
       height: 110,
       width: MediaQuery.of(context).size.width,
@@ -43,25 +41,28 @@ class FinalPayment extends StatelessWidget {
             builder: (context, constraints) {
               return Scroller.stack(
                 children: <Widget>[
-                  Consumer<Calculation>(
-                    builder: (_, calculation, __) {
+                  Consumer<FinalNotifier>(
+                    builder: (_, finalNotifier, __) {
+                      final color = Theme.of(_).textTheme.bodyText1!.color!;
+                      final finalPayment = finalNotifier.state.getFinalPayment();
                       return ScaleSwitcher(
-                        duration: AnimationProvider.expandedDuration,
+                        duration: Animations.expandedDuration,
                         child: Container(
                           alignment: Alignment.center,
-                          key: ValueKey(calculation.finalPayment()),
+                          key: ValueKey(finalPayment),
                           height: 42,
                           child: Text(
-                            calculation.finalPayment(),
+                            finalPayment,
                             softWrap: false,
                             textAlign: TextAlign.center,
                             textScaleFactor: 1.0,
                             style: TextStyle(
+                              color: finalNotifier.state.isEditing ? color.withOpacity(0.5) : color,
                               fontSize: getFontSize(
                                 37.0,
                                 1.2,
                                 (constraints.maxWidth - 90).clamp(0.0, 250.0),
-                                calculation.finalPayment(),
+                                finalPayment,
                                 TextDirection.ltr,
                               ),
                             ),
@@ -87,7 +88,6 @@ class FinalPayment extends StatelessWidget {
                         ),
                         ontap: () => navigate(
                           SC.amortListPage,
-                          animation,
                           context,
                         ),
                       ),
@@ -111,7 +111,6 @@ class FinalPayment extends StatelessWidget {
                         ),
                         ontap: () => navigate(
                           SC.graphPage,
-                          animation,
                           context,
                         ),
                       ),

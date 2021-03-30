@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/dialogs/dialogs.dart';
-import 'package:loan_calc_dev/provider/animation_provider.dart';
+import 'package:loan_calc_dev/convience_classes/saved_index.dart';
+import 'package:loan_calc_dev/convience_classes/animation_provider.dart';
+import 'package:loan_calc_dev/state_management/final_notifier/final_notifier.dart';
+import 'package:loan_calc_dev/state_management/input_notifier/input_notifier.dart';
+import 'package:loan_calc_dev/state_management/rounding_notifier/rounding_notifier.dart';
+import 'package:loan_calc_dev/storage/input_tracker/input_tracker_notifier.dart';
+import 'package:loan_calc_dev/storage/precision/precision_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/rounded_appbar.dart';
 import 'package:loan_calc_dev/ui/pages/home_page/main_widgets/home_page_widgets.dart';
@@ -13,95 +18,90 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  late AnimationProvider animation;
+  late Animations animations;
+  
   @override
   void initState() {
     super.initState();
-    animation = Provider.of<AnimationProvider>(context, listen: false);
-    animation.monthAnimationController = AnimationController(
-      vsync: this,
-      duration: AnimationProvider.expandedDuration,
-    );
-    animation.finalAnimationController = AnimationController(
-      vsync: this,
-      duration: AnimationProvider.expandedDuration,
-    );
-    animation.monthlyAnimation = CurvedAnimation(
-      parent: animation.monthAnimationController!,
-      curve: Curves.fastOutSlowIn,
-    );
-    animation.finalAnimation = CurvedAnimation(
-      parent: animation.finalAnimationController!,
-      curve: Curves.fastOutSlowIn,
-    );
+    ShowDialogs.context = context;
+    animations = Animations(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    animations.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Provider.of<ShowDialogs>(context, listen: false).context = context;
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: RoundedAppBar(
-          leading: FadeOutButton(),
-          child: Text(
-            'LoanCalc',
-            textScaleFactor: 1,
-            style: theme.textTheme.headline6!.copyWith(
-              fontSize: 40,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
-          trailing: SettingsButton(),
-        ),
-        body: Center(
-          child: Scroller.column(
-            padding: EdgeInsets.only(
-              top: 56 + MediaQuery.of(context).padding.top,
-            ),
-            children: <Widget>[
-              const MyCard(
-                child: Input(),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 4.0,
-                  primary: theme.primaryColor,
-                  shape: const StadiumBorder(
-                    side: BorderSide(
-                      color: Colors.black38,
-                    ),
-                  ),
-                ),
-                onPressed: Provider.of<Calculation>(context, listen: false).incrementCounter,
-                child: Text(
-                  'CALCULATE',
-                  textScaleFactor: 1,
-                  style: theme.textTheme.bodyText1!.copyWith(
-                    fontSize: 23.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizeScaleTransition(
-                animation: animation.monthlyAnimation,
-                child: const MyCard(
-                  child: MonthlyPaymentResult(),
-                ),
-              ),
-              SizeScaleTransition(
-                animation: animation.finalAnimation,
-                child: const MyCard(
-                  child: FinalPayment(),
-                ),
-              ),
-            ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => InputNotifier(
+            precisionNotifier: context.read<PrecisionNotifier>(),
+        ),),
+        ChangeNotifierProvider(
+          create: (context) => RoundingNotifier(
+            inputNotifier: context.read<InputNotifier>(),
+            precisionNotifier: context.read<PrecisionNotifier>(),
+            inputTrackerNotifier: context.read<InputTrackerNotifier>(),
+            monthlyPaymentController: animations.monthAnimationController,
+            savedIndex: context.read<SavedIndex>(),
           ),
         ),
-        drawer: const HistoryDrawer(),
+        ChangeNotifierProvider(
+          create: (context) => FinalNotifier(
+            roundingNotifier: context.read<RoundingNotifier>(),
+            precisionNotifier: context.read<PrecisionNotifier>(),
+            finalPaymentController: animations.finalAnimationController,
+          ),
+        ),
+      ],
+      child: GestureDetector(
+        onTap: FocusScope.of(context).unfocus,
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: theme.scaffoldBackgroundColor,
+          appBar: RoundedAppBar(
+            leading: const HistoryButton(),
+            child: Text(
+              'LoanCalc',
+              textScaleFactor: 1,
+              style: theme.textTheme.headline6!.copyWith(
+                fontSize: 40,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            trailing: const SettingsButton(),
+          ),
+          body: Center(
+            child: Scroller.column(
+              padding: EdgeInsets.only(
+                top: 56 + MediaQuery.of(context).padding.top,
+              ),
+              children: <Widget>[
+                const MyCard(
+                  child: Input(),
+                ),
+                const CalculateButton(),
+                SizeScaleTransition(
+                  animation: animations.monthlyAnimation,
+                  child: const MyCard(
+                    child: MonthlyPaymentResult(),
+                  ),
+                ),
+                SizeScaleTransition(
+                  animation: animations.finalAnimation,
+                  child: const MyCard(
+                    child: FinalPayment(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          drawer: const HistoryDrawer(),
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/calculation/utils.dart';
-import 'package:loan_calc_dev/provider/animation_provider.dart';
+import 'package:loan_calc_dev/convience_classes/animation_provider.dart';
+import 'package:loan_calc_dev/state_management/rounding_notifier/rounding_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -28,23 +28,26 @@ class MonthlyPaymentResult extends StatelessWidget {
           ),
           LayoutBuilder(
             builder: (context, constraints) {
-              return Consumer<Calculation>(
-                builder: (_, calculation, __) {
+              return Consumer<RoundingNotifier>(
+                builder: (_, roundingNotifier, __) {
+                  final color = Theme.of(_).textTheme.bodyText1!.color!;
+                  final payment = roundingNotifier.state.monthlyPayment();
                   return ScaleSwitcher(
-                    duration: AnimationProvider.expandedDuration,
+                    duration: Animations.expandedDuration,
                     child: Container(
                       alignment: Alignment.center,
-                      key: ValueKey(calculation.monthlyPayment()),
+                      key: ValueKey(payment),
                       height: 47,
                       child: Text(
-                        calculation.monthlyPayment(),
+                        payment,
                         textScaleFactor: 1.0,
                         style: TextStyle(
+                          color: roundingNotifier.state.isEditing ? color.withOpacity(0.5) : color,
                           fontSize: getFontSize(
                             40.0,
                             null,
                             constraints.maxWidth,
-                            calculation.monthlyPayment(),
+                            payment,
                             TextDirection.ltr,
                           ),
                         ),
@@ -73,18 +76,23 @@ class MonthlyPaymentResult extends StatelessWidget {
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
-                      Consumer<Calculation>(
-                        builder: (_, calculation, __) {
+                      Consumer<RoundingNotifier>(
+                        builder: (_, rounding, __) {
+                          void Function(bool?)? onChanged;
+                          if (!rounding.state.isEditing) {
+                            onChanged = rounding.roundUpChange;
+                          }
                           return Checkbox(
-                            value: calculation.isRoundUp,
-                            onChanged: calculation.onCheckUp,
+                            value: rounding.state.roundUp,
+                            onChanged: onChanged,
                           );
                         },
                       )
                     ],
                   ),
                   SizedBox(
-                      width: (constraints.maxWidth - 210).clamp(0.0, 65.0)),
+                    width: (constraints.maxWidth - 210).clamp(0.0, 65.0),
+                  ),
                   Column(
                     children: <Widget>[
                       Container(
@@ -96,11 +104,15 @@ class MonthlyPaymentResult extends StatelessWidget {
                           style: TextStyle(fontSize: 17),
                         ),
                       ),
-                      Consumer<Calculation>(
-                        builder: (_, calculation, __) {
+                      Consumer<RoundingNotifier>(
+                        builder: (_, rounding, __) {
+                          void Function(bool?)? onChanged;
+                          if (!rounding.state.isEditing) {
+                            onChanged = rounding.roundDownChange;
+                          }
                           return Checkbox(
-                            value: calculation.isRoundDown,
-                            onChanged: calculation.onCheckDown,
+                            value: rounding.state.roundDown,
+                            onChanged: onChanged,
                           );
                         },
                       )

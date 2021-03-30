@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
-import 'package:loan_calc_dev/provider/theme_provider.dart';
+import 'package:loan_calc_dev/storage/precision/precision_notifier.dart';
+import 'package:loan_calc_dev/storage/theme_bool/theme_bool_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/home_page/home_page_helper_widgets.dart';
-import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:loan_calc_dev/ui/themes/themes.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -14,94 +12,94 @@ class SettingsDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<ThemeProvider>(context);
-    final isDark = themeChange.getTheme == CalcThemes.darkTheme;
-    final isPlatformLight =
-        MediaQuery.platformBrightnessOf(context) == Brightness.light;
+    final themeNotifier = Provider.of<ThemeBoolNotifier>(context);
+    final isDark = themeNotifier.theme == CalcThemes.darkTheme;
+    final isPlatformLight = MediaQuery.platformBrightnessOf(context) == Brightness.light;
+    final precisionNotifier = context.watch<PrecisionNotifier>();
     return Container(
       height: 200,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          MyCard(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: const Icon(
-                    Icons.settings,
-                    size: 30,
+          Expanded(
+            child: MyCard(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Icon(
+                      Icons.settings,
+                      size: 30,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          MyCard(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const Text(
-                  '.XX',
-                  textScaleFactor: 1.0,
-                  style: TextStyle(fontSize: 23),
-                ),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton<int>(
-                    value: Provider.of<Calculation>(context).precision,
-                    onChanged: (val) async =>
-                       await Provider.of<Calculation>(context, listen: false).setPrecision(val),
-                    items: values
-                        .map(
-                          (index) => DropdownMenuItem(
-                            child: Text(
-                              '$index',
-                              textScaleFactor: 1.0,
-                              style: const TextStyle(fontSize: 23),
+          Expanded(
+            child: MyCard(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    '.'.padRight(precisionNotifier.precision + 1, 'X'),
+                    textScaleFactor: 1.0,
+                    style: TextStyle(fontSize: 23),
+                  ),
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton<int>(
+                      value: precisionNotifier.precision,
+                      onChanged: (val) => precisionNotifier.updatePrecision(val!),
+                      items: values
+                          .map(
+                            (index) => DropdownMenuItem(
+                              child: Text(
+                                '$index',
+                                textScaleFactor: 1.0,
+                                style: const TextStyle(fontSize: 23),
+                              ),
+                              value: index,
                             ),
-                            value: index,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                )
-              ],
+                          )
+                          .toList(),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
-          MyCard(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.brightness_5,
-                    size: 30,
+          Expanded(
+            child: MyCard(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.brightness_5,
+                      size: 30,
+                    ),
                   ),
-                ),
-                Switch(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  activeColor: Colors.white,
-                  inactiveThumbColor: Colors.black,
-                  value: isPlatformLight ? isDark : true,
-                  onChanged: (_) async {
-                    if (isPlatformLight) {
-                      await SharedPreferences.getInstance()
-                        ..setBool(SC.themePrefsKey, !isDark);
-                      themeChange.setTheme(
-                        isDark ? CalcThemes.lightTheme : CalcThemes.darkTheme,
-                      );
-                    }
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.brightness_3,
-                    size: 30,
+                  Switch(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    activeColor: Colors.white,
+                    inactiveThumbColor: Colors.black,
+                    value: isPlatformLight ? isDark : true,
+                    onChanged: (val) {
+                      if (isPlatformLight) {
+                        themeNotifier.setThemeBool(val);
+                      }
+                    },
                   ),
-                ),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.brightness_3,
+                      size: 30,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

@@ -5,17 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
 
 class GraphPainter extends CustomPainter {
-  final Paint linePainter;
-  final TextPainter textPainter;
-  final TextStyle textStyle;
-  final Brightness themeBrightness;
-  final List<MonthlyBreakDown> mbd;
-  final List<InputTracker> ipt;
-  final bool isDark;
-  late Color paymentColor;
-  late Color principalColor;
-  late Color interestColor;
-  late Color totalRepaidColor;
 
   GraphPainter({
     required this.themeBrightness,
@@ -37,6 +26,18 @@ class GraphPainter extends CustomPainter {
     totalRepaidColor = isDark ? Colors.greenAccent : Colors.green;
   }
 
+  final Paint linePainter;
+  final TextPainter textPainter;
+  final TextStyle textStyle;
+  final Brightness themeBrightness;
+  final List<MonthlyBreakDown> mbd;
+  final InputTracker ipt;
+  final bool isDark;
+  late Color paymentColor;
+  late Color principalColor;
+  late Color interestColor;
+  late Color totalRepaidColor;
+
   @override
   void paint(Canvas canvas, Size size) {
     canvas.rotate(math.pi / 2);
@@ -47,7 +48,7 @@ class GraphPainter extends CustomPainter {
     final monthLength = mbd.length;
 
     final offsetter = heightResizer / monthLength;
-    final offsetterPrinc = widthResizer / (ipt.first.amount* 1.1);
+    final offsetterPrinc = widthResizer / (ipt.amount * 1.1);
     final length = widthResizer / (mbd[0].payment* 1.1);
 
     canvas.save();
@@ -187,7 +188,7 @@ class GraphPainter extends CustomPainter {
     //
     //Right Axis
     //
-    moredub = ipt.first.amount;
+    moredub = ipt.amount;
     if (moredub > 1) {
       moredub /= 10;
     }

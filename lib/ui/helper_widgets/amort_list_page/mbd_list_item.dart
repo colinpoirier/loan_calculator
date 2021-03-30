@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
-import 'package:loan_calc_dev/provider/animation_provider.dart';
+import 'package:loan_calc_dev/convience_classes/animation_provider.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/amort_list_page/fifteen_font_text.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/my_card.dart';
 
@@ -93,7 +93,7 @@ class _MbdListItemState extends State<MbdListItem> {
     _expandedWidth += 15;
   }
 
-  double _getWidth() => _isExpanded? _expandedWidth : collapsedWidth;
+  double _getWidth() => _isExpanded ? _expandedWidth : collapsedWidth;
 
   List<Widget> _getRowText(int start, int end) {
     return <Widget>[
@@ -125,7 +125,7 @@ class _MbdListItemState extends State<MbdListItem> {
       child: MyCard(
         child: AnimatedContainer(
           curve: Curves.fastOutSlowIn,
-          duration: AnimationProvider.expandedDuration,
+          duration: Animations.expandedDuration,
           margin: const EdgeInsets.all(10.0),
           width: _getWidth(),
           child: Stack(

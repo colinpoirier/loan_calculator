@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:loan_calc_dev/state_management/final_notifier/final_notifier.dart';
+import 'package:provider/provider.dart';
 
 class Scroller extends SingleChildScrollView {
   final List<Widget> children;
@@ -32,38 +34,63 @@ class Scroller extends SingleChildScrollView {
         );
 }
 
-class DataContainer extends Container {
-  final Widget topChild;
-  final Widget bottomChild;
-  final VoidCallback ontap;
-
+class DataContainer extends StatelessWidget {
   DataContainer({
     required this.topChild,
     required this.bottomChild,
     required this.ontap,
-  }) : super(
-          height: 55,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Align(
-                alignment: Alignment.topCenter,
-                child: topChild,
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  child: GestureDetector(
-                    onTap: ontap,
-                    child: bottomChild,
-                  ),
-                ),
-              ),
-            ],
+  });
+
+  final Widget topChild;
+  final Widget bottomChild;
+  final VoidCallback ontap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 55,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: topChild,
           ),
-        );
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: 50,
+              height: 50,
+              child: NavButton(
+                onPressed: ontap,
+                icon: bottomChild,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NavButton extends StatelessWidget {
+  NavButton({
+    Key? key,
+    required this.onPressed,
+    required this.icon,
+  }) : super(key: key);
+
+  final VoidCallback onPressed;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = context.select<FinalNotifier, bool>((fn) => !fn.state.isEditing);
+    return IconButton(
+      icon: icon,
+      onPressed: enabled ? onPressed : null,
+    );
+  }
 }
 
 class ScaleSwitcher extends AnimatedSwitcher {

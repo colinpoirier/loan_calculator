@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:loan_calc_dev/provider/theme_provider.dart';
+import 'package:loan_calc_dev/storage/theme_bool/theme_bool_notifier.dart';
 import 'package:loan_calc_dev/ui/themes/themes.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +11,8 @@ class SystemBrightness extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDeviceLight = themeProvider.getTheme == CalcThemes.lightTheme;
+    final themeNotifier = Provider.of<ThemeBoolNotifier>(context);
+    final isDeviceLight = themeNotifier.theme == CalcThemes.lightTheme;
     final isPlatformLight = MediaQuery.of(context).platformBrightness == Brightness.light;
     final isAllLight = isDeviceLight && isPlatformLight;
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

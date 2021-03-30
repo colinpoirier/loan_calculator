@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 // import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:copied_draggable_scrollbar/copied_draggable_scrollbar.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
-import 'package:loan_calc_dev/models/saved_index.dart';
+import 'package:loan_calc_dev/models/data_classes.dart';
+import 'package:loan_calc_dev/convience_classes/saved_index.dart';
+import 'package:loan_calc_dev/storage/precision/precision_notifier.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/amort_list_page/amort_list_page_helper_widgets.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/rounded_appbar.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
-import 'package:loan_calc_dev/ui/route_generator/route_generator.dart';
 import 'package:provider/provider.dart';
 
 class AmortizerList extends StatefulWidget {
   const AmortizerList({
     Key? key,
+    required this.mbdList,
   }) : super(key: key);
+
+  final List<MonthlyBreakDown> mbdList;
 
   @override
   AmortizerListState createState() => AmortizerListState();
@@ -23,10 +26,12 @@ class AmortizerListState extends State<AmortizerList> {
 
   late SavedIndex savedIndex;
 
+  List<MonthlyBreakDown> get mbdList => widget.mbdList;
+
   @override
   void initState() {
     super.initState();
-    savedIndex = Provider.of<Calculation>(context, listen: false).savedIndex;
+    savedIndex = Provider.of<SavedIndex>(context, listen: false);
     scrollController = ScrollController(
       initialScrollOffset: savedIndex.index,
     );
@@ -51,13 +56,11 @@ class AmortizerListState extends State<AmortizerList> {
   @override
   Widget build(BuildContext context) {
     final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
-    final calculation = Provider.of<Calculation>(context, listen: false);
-    final mbdList = calculation.mbdList;
-    final precision = calculation.precision;
+    final precisionNotifier = Provider.of<PrecisionNotifier>(context, listen: false);
+    final precision = precisionNotifier.precision;
     final mediaQuery = MediaQuery.of(context);
     final width = mediaQuery.size.width;
     final topPadding = mediaQuery.padding.top;
-    if (mbdList.isEmpty) return RouteGenerator.errorPage(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: RoundedAppBar(

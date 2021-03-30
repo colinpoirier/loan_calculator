@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
 import 'package:loan_calc_dev/calculation/utils.dart';
 import 'package:loan_calc_dev/models/data_classes.dart';
+import 'package:loan_calc_dev/storage/input_tracker/input_tracker_notifier.dart';
 
 class ShowDialogs {
-  late BuildContext context;
+  static late BuildContext context;
 
-  void unFocus() => FocusScope.of(context).unfocus();
+  static void unFocus() => FocusScope.of(context).unfocus();
 
-  void ooops(
+  static void ooops(
     double counter,
     double interest,
     int precision,
@@ -49,10 +49,10 @@ class ShowDialogs {
     );
   }
 
-  void showDeleteConfirm(
+  static void showDeleteConfirm(
     InputTracker input,
     BuildContext context,
-    Calculation calculation,
+    InputTrackerNotifier inputTrackerNotifier,
   ) {
     showDialog(
       context: context,
@@ -66,9 +66,7 @@ class ShowDialogs {
           TextButton(
             child: const Text('Confirm'),
             onPressed: () async {
-              calculation.iptList.remove(input);
-              await calculation.inputTrackerStorage.saveIptList();
-              calculation.update();
+              await inputTrackerNotifier.removeFromIpt(input);
               Navigator.pop(context);
             },
           ),

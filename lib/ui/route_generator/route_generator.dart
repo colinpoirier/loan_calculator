@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loan_calc_dev/models/data_classes.dart';
 import 'package:loan_calc_dev/ui/helper_widgets/rounded_appbar.dart';
 import 'package:loan_calc_dev/ui/pages/amortizer_list_page.dart';
 import 'package:loan_calc_dev/ui/pages/graph_page/graph_page.dart';
@@ -16,13 +17,23 @@ class RouteGenerator {
           ),
         );
       case SC.graphPage:
-        return FadeRouteTransition(
-          child: GraphPage(),
-        );
+        final args = settings.arguments;
+        if (args is List<MonthlyBreakDown> && args.isNotEmpty){
+          return FadeRouteTransition(
+            child: GraphPage(mbdList: args,),
+          );
+        } else {
+          return FadeRouteTransition(child: ErrorPage());
+        }
       case SC.amortListPage:
-        return FadeRouteTransition(
-          child: AmortizerList(),
-        );
+        final args = settings.arguments;
+        if (args is List<MonthlyBreakDown> && args.isNotEmpty){      
+          return FadeRouteTransition(
+            child: AmortizerList(mbdList: args),
+          );
+        } else {
+          return FadeRouteTransition(child: ErrorPage());
+        }        
       default:
         return _errorRoute();
     }
@@ -53,6 +64,25 @@ class RouteGenerator {
       ),
     );
   }
+}
+
+class ErrorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: RoundedAppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: const Center(
+        child: Text('Error'),
+      ),
+    );
+  }
+
 }
 
 class FadeRouteTransition extends PageRouteBuilder {

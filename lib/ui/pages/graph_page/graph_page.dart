@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:loan_calc_dev/calculation/calculation.dart';
+import 'package:loan_calc_dev/models/data_classes.dart';
+import 'package:loan_calc_dev/storage/input_tracker/input_tracker_notifier.dart';
 import 'package:loan_calc_dev/ui/pages/graph_page/graph_painter.dart';
-import 'package:loan_calc_dev/ui/route_generator/route_generator.dart';
 import 'package:loan_calc_dev/ui/route_generator/string_constants.dart';
 import 'package:provider/provider.dart';
 
 class GraphPage extends StatelessWidget {
   const GraphPage({
     Key? key,
+    required this.mbdList,
   }) : super(key: key);
+
+  final List<MonthlyBreakDown> mbdList;
 
   static const bsList = <BoxShadow>[
     BoxShadow(
@@ -34,11 +37,8 @@ class GraphPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final calculation = Provider.of<Calculation>(context, listen: false);
-    final mbdList = calculation.mbdList;
-    final iptList = calculation.iptList;
-    if (mbdList.isEmpty)
-      return RouteGenerator.errorPage(context);
+    final inputNotifier = Provider.of<InputTrackerNotifier>(context, listen: false);
+    final iptList = inputNotifier.iptList;
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
@@ -65,7 +65,7 @@ class GraphPage extends StatelessWidget {
                       textStyle: theme.textTheme.bodyText2!,
                       themeBrightness: theme.brightness,
                       mbd: mbdList,
-                      ipt: iptList,
+                      ipt: iptList.first,
                     ),
                   ),
                 ),

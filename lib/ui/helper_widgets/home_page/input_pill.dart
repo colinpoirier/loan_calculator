@@ -9,8 +9,8 @@ class InputPill extends StatelessWidget {
     required this.hintText,
     required this.leadingText,
     required this.controller,
-    required this.validator,
     required this.maxWidth,
+    required this.errorText,
   }) : super(key: key);
 
   final String hintText;
@@ -19,8 +19,8 @@ class InputPill extends StatelessWidget {
   final bool toDisplay;
   final bool timeChanged;
   final TextEditingController controller;
-  final String? Function(String?) validator;
   final double maxWidth;
+  final String? errorText;
 
   Widget displayTimeChange() {
     return Container(
@@ -37,29 +37,36 @@ class InputPill extends StatelessWidget {
               fontSize: 15,
             ),
           ),
-          PopupMenuButton(
-            padding: const EdgeInsets.all(0),
-            icon: const Icon(
-              Icons.calendar_today,
-              size: 30.0,
-            ),
-            elevation: 10.0,
-            onSelected: timeChange,
-            itemBuilder: (context) => const [
-              PopupMenuItem<bool>(
-                value: false,
-                child: Center(
-                  child: Text('Months'),
-                ),
-              ),
-              PopupMenuItem<bool>(
-                value: true,
-                child: Center(
-                  child: Text('Years'),
-                ),
-              ),
-            ],
+          IconButton(
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.calendar_today, size: 30),
+            onPressed: () {
+              timeChange!(!timeChanged);
+            },
           ),
+          // PopupMenuButton(
+          //   padding: const EdgeInsets.all(0),
+          //   icon: const Icon(
+          //     Icons.calendar_today,
+          //     size: 30.0,
+          //   ),
+          //   elevation: 10.0,
+          //   onSelected: timeChange,
+          //   itemBuilder: (context) => const [
+          //     PopupMenuItem<bool>(
+          //       value: false,
+          //       child: Center(
+          //         child: Text('Months'),
+          //       ),
+          //     ),
+          //     PopupMenuItem<bool>(
+          //       value: true,
+          //       child: Center(
+          //         child: Text('Years'),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -93,18 +100,14 @@ class InputPill extends StatelessWidget {
             maxWidth: (maxWidth - 165).clamp(0.0, 215.0),
           ),
           padding: const EdgeInsets.all(3.0),
-          child: TextFormField(
+          child: TextField(
             style: TextStyle(
               fontSize: 22.0 / MediaQuery.textScaleFactorOf(context),
               height: 1.2,
             ),
             keyboardType: TextInputType.number,
-            validator: validator,
-            autovalidateMode: AutovalidateMode.always,
             controller: controller,
-            decoration: InputDecoration(
-              hintText: hintText,
-            ),
+            decoration: InputDecoration(hintText: hintText, errorText: errorText),
           ),
         ),
       ],

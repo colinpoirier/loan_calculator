@@ -3,17 +3,17 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 double roundUp(double val, int precision) {
-  int scale = pow(10, precision) as int;
+  final scale = pow(10, precision);
   return (val * scale).ceilToDouble() / scale;
 }
 
 double roundDown(double val, int precision) {
-  int scale = pow(10, precision) as int;
+  final scale = pow(10, precision);
   return (val * scale).floorToDouble() / scale;
 }
 
 double roundToPrecision(double val, int precision) {
-  int scale = pow(10, precision) as int;
+  final scale = pow(10, precision);
   return (val * scale).roundToDouble() / scale;
 }
 
