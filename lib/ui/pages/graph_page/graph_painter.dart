@@ -48,8 +48,9 @@ class GraphPainter extends CustomPainter {
     final monthLength = mbd.length;
 
     final offsetter = heightResizer / monthLength;
-    final offsetterPrinc = widthResizer / (ipt.amount * 1.1);
-    final length = widthResizer / (mbd[0].payment* 1.1);
+    final iptAmount = double.parse("ipt.amount");
+    final offsetterPrinc = widthResizer / (iptAmount * 1.1);
+    final length = widthResizer / (mbd[0].payment * 1.1);
 
     canvas.save();
 
@@ -188,7 +189,7 @@ class GraphPainter extends CustomPainter {
     //
     //Right Axis
     //
-    moredub = ipt.amount;
+    moredub = iptAmount;
     if (moredub > 1) {
       moredub /= 10;
     }

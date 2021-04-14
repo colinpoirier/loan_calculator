@@ -2,7 +2,7 @@ class RoundingState {
   RoundingState({
     this.precisePayment,
     this.roundedPayment,
-    required this.precision,
+    this.precision,
     this.roundUp = false,
     this.roundDown = false,
     this.isEditing = false,
@@ -11,19 +11,19 @@ class RoundingState {
   final double? precisePayment;
   final double? roundedPayment;
   final double? payment;
-  final int precision;
+  final int? precision;
   final bool roundUp;
   final bool roundDown;
   final bool isEditing;
 
   String monthlyPayment() {
     if (roundUp || roundDown) {
-      return roundedPayment!.toStringAsFixed(precision);
+      return roundedPayment!.toStringAsFixed(precision!);
     }
     if (payment == null) {
       return '';
     } else {
-      return payment!.toStringAsFixed(precision + 3);
+      return payment!.toStringAsFixed(precision! + 3);
     }
   }
 

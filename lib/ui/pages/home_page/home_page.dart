@@ -44,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ChangeNotifierProvider(
           create: (context) => RoundingNotifier(
             inputNotifier: context.read<InputNotifier>(),
-            precisionNotifier: context.read<PrecisionNotifier>(),
             inputTrackerNotifier: context.read<InputTrackerNotifier>(),
             monthlyPaymentController: animations.monthAnimationController,
             savedIndex: context.read<SavedIndex>(),
@@ -53,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         ChangeNotifierProvider(
           create: (context) => FinalNotifier(
             roundingNotifier: context.read<RoundingNotifier>(),
-            precisionNotifier: context.read<PrecisionNotifier>(),
             finalPaymentController: animations.finalAnimationController,
           ),
         ),

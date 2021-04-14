@@ -29,14 +29,14 @@ class Input extends StatelessWidget {
                 leadingText: "Loan Amount",
                 hintText: 'Currency',
                 controller: inputNotifier.amount,
-                errorText: inputState.amountError,
+                errorText: 'inputState.amountError',
               ),
               InputPill(
                 maxWidth: constraints.maxWidth,
                 leadingText: "Interest",
                 hintText: 'Percent',
                 controller: inputNotifier.percent,
-                errorText: inputState.percentError,
+                errorText: 'inputState.percentError',
               ),
               InputPill(
                 maxWidth: constraints.maxWidth,

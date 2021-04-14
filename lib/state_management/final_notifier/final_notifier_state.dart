@@ -1,16 +1,16 @@
 import 'package:loan_calc_dev/models/data_classes.dart';
 
 class FinalState {
-  FinalState({this.finalPayment, this.mbdList, required this.precision, this.isEditing = false});
+  FinalState({this.finalPayment, this.mbdList, this.precision, this.isEditing = false});
 
   final double? finalPayment;
   final List<MonthlyBreakDown>? mbdList;
-  final int precision;
+  final int? precision;
   final bool isEditing;
 
   String getFinalPayment() {
     if (finalPayment != null) {
-      return finalPayment!.toStringAsFixed(precision);
+      return finalPayment!.toStringAsFixed(precision!);
     }
     return '';
   }  

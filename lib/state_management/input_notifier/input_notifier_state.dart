@@ -1,121 +1,132 @@
+import 'package:loan_calc_dev/state_management/input_notifier/input_notifier_sub_states/amount_state.dart';
+import 'package:loan_calc_dev/state_management/input_notifier/input_notifier_sub_states/length_state.dart';
+import 'package:loan_calc_dev/state_management/input_notifier/input_notifier_sub_states/percent_state.dart';
+
 class InputState {
   InputState({
-    this.amount,
-    this.percent,
-    this.length,
-    this.amountError,
-    this.percentError,
-    this.lengthError,
+    required this.amountState,
+    required this.percentState,
+    required this.lengthState,
     this.changeTime = false,
-    required this.precision,
-  }) : canSubmit = amountError == null && percentError == null && lengthError == null && amount != null && percent != null && length != null;
+  }) : canSubmit = amountState.canSubmit && percentState.canSubmit && lengthState.canSubmit;
 
-  final double? amount;
-  final double? percent;
-  final double? length;
-  final String? amountError;
-  final String? percentError;
-  final String? lengthError;
+  final AmountState amountState;
+  final PercentState percentState;
+  final LengthState lengthState;
   final bool changeTime;
   final bool canSubmit;
-  final int precision;
 
-  InputState updateAmount({double? amount, String? amountError}) {
+  InputState.initial(int precision)
+      : this(
+          amountState: AmountState(input: '', precision: precision),
+          percentState: PercentState(input: ''),
+          lengthState: MonthState(input: ''),
+        );
+
+  // double get amount => double.parse(amountState.value!);
+  // String get amountString => amountState.value!;
+  // String? get amountError => amountState.error;
+
+  // double get percent => double.parse(percentState.value!) / 1200;
+  // String get percentString => percentState.value!;
+  // String? get percentError => percentState.error;
+
+  // double get length => double.parse(lengthState.value!);
+  // String get lengthString => lengthState.value!;
+  String? get lengthError => lengthState.error;
+
+  int get precision => amountState.precision;
+
+  // InputState updateAmount({required String input, int? precision}) {
+  //   return InputState(
+  //     amountState: AmountState(input: input, precision: precision ?? this.precision),
+  //     percentState: percentState,
+  //     lengthState: lengthState,
+  //     changeTime: changeTime,
+  //   );
+  // }
+
+  // InputState updatePercent({required String input}) {
+  //   return InputState(
+  //     amountState: amountState,
+  //     percentState: PercentState(input: input),
+  //     lengthState: lengthState,
+  //     changeTime: changeTime,
+  //   );
+  // }
+
+  // InputState updateLength({required String input, bool? changeTime}) {
+  //   final lengthState = changeTime ?? this.changeTime ? YearState(input: input) : MonthState(input: input);
+  //   return InputState(
+  //     amountState: amountState,
+  //     percentState: percentState,
+  //     lengthState: lengthState,
+  //     changeTime: changeTime ?? this.changeTime,
+  //   );
+  // }
+
+  InputState copyWith({
+    String? amountInput,
+    String? percentInput,
+    String? lengthInput,
+    bool? changeTime,
+    int? precision,
+  }) {
+    assert((){
+      if(precision != null && amountInput == null){
+        return false;
+      }
+      return true;
+    }(),'assert amount value with precision to update validation');
+    assert((){
+      if(changeTime != null && lengthInput == null){
+        return false;
+      }
+      return true;
+    }(),'assert length value with changeTime to update validation');
+
+    AmountState? amountState;
+    if (amountInput != null) {
+      amountState = AmountState(input: amountInput, precision: precision ?? this.precision);
+    }
+
+    PercentState? percentState;
+    if (percentInput != null) {
+      percentState = PercentState(input: percentInput);
+    }
+
+    final newChangeTime = changeTime ?? this.changeTime;
+
+    LengthState? lengthState;
+    if (lengthInput != null) {
+      lengthState = newChangeTime ? YearState(input: lengthInput) : MonthState(input: lengthInput);
+    }
     return InputState(
-      amount: amount,
-      percent: percent,
-      length: length,
-      amountError: amountError,
-      percentError: percentError,
-      lengthError: lengthError,
-      changeTime: changeTime,  
-      precision: precision,    
+      amountState: amountState ?? this.amountState,
+      percentState: percentState ?? this.percentState,
+      lengthState: lengthState ?? this.lengthState,
+      changeTime: newChangeTime,
     );
-  }
-  
-  InputState updatePercent({double? percent, String? percentError}) {
-    return InputState(
-      amount: amount,
-      percent: percent,
-      length: length,
-      amountError: amountError,
-      percentError: percentError,
-      lengthError: lengthError,
-      changeTime: changeTime,      
-      precision: precision,    
-    );
-  }
-
-  InputState updateLength({double? length, String? lengthError}) {
-    return InputState(
-      amount: amount,
-      percent: percent,
-      length: length,
-      amountError: amountError,
-      percentError: percentError,
-      lengthError: lengthError,
-      changeTime: changeTime,      
-      precision: precision,    
-    );
-  }
-
-  InputState updateChangeTime({required bool changeTime}) {
-    return InputState(
-      amount: amount,
-      percent: percent,
-      length: length,
-      amountError: amountError,
-      percentError: percentError,
-      lengthError: lengthError,
-      changeTime: changeTime,      
-      precision: precision,    
-    );    
-  }
-
-  InputState updatePrecision({required int precision}) {
-    return InputState(
-      amount: amount,
-      percent: percent,
-      length: length,
-      amountError: amountError,
-      percentError: percentError,
-      lengthError: lengthError,
-      changeTime: changeTime,      
-      precision: precision,    
-    );    
-  }
-
-  @override
-  String toString() {
-    return 'InputState(amount: $amount, percent: $percent, length: $length, amountError: $amountError, percentError: $percentError, lengthError: $lengthError, changeTime: $changeTime, canSubmit: $canSubmit)';
   }
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
-  
+
     return o is InputState &&
-      o.amount == amount &&
-      o.percent == percent &&
-      o.length == length &&
-      o.amountError == amountError &&
-      o.percentError == percentError &&
-      o.lengthError == lengthError &&
-      o.changeTime == changeTime &&
-      o.canSubmit == canSubmit &&
-      o.precision == precision;
+        o.amountState == amountState &&
+        o.percentState == percentState &&
+        o.lengthState == lengthState &&
+        o.changeTime == changeTime &&
+        o.canSubmit == canSubmit;
   }
 
   @override
   int get hashCode {
-    return amount.hashCode ^
-      percent.hashCode ^
-      length.hashCode ^
-      amountError.hashCode ^
-      percentError.hashCode ^
-      lengthError.hashCode ^
-      changeTime.hashCode ^
-      canSubmit.hashCode ^
-      precision.hashCode;
+    return amountState.hashCode ^
+        percentState.hashCode ^
+        lengthState.hashCode ^
+        changeTime.hashCode ^
+        canSubmit.hashCode;
   }
 }

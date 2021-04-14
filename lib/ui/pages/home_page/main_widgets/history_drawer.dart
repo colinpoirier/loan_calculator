@@ -34,7 +34,7 @@ class HistoryDrawer extends StatelessWidget {
               },
               children: <Widget>[
                 Text('Amount: ${input.amount}', textScaleFactor: 1.0,),
-                Text('Percent: ${input.percent * 1200}', textScaleFactor: 1.0,),
+                Text('Percent: ${input.percent}', textScaleFactor: 1.0,),
                 Text('Months: ${input.month}', textScaleFactor: 1.0,)
               ],
             ),
