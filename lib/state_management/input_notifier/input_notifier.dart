@@ -41,16 +41,18 @@ class InputNotifier extends CalcNotifier<InputState> {
   }
 
   void setControllerInputs(InputTracker ipt) {
-
-    // amount.text = ipt.amount;
-
-    // percent.text = ipt.percent;
-    // num months = int.parse(ipt.month);
-    // if (state.changeTime){
-    //   months /= 12;
-    // }
-//TODO save string and num. compare only num
-    // length.text = state.changeTime ? '${months / 12}' : '$months';
+    amount.text = ipt.amountString;
+    percent.text = ipt.percentString;
+    num months = num.parse(ipt.monthsString);
+    if (state.changeTime){
+      months /= 12;
+      if (months % 1 == 0){
+        months = months.toInt();
+      }
+    } else if (months is! int) {
+      months = months.toInt();
+    }
+    length.text = '$months';
   }
 
   @override

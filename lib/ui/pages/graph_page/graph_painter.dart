@@ -48,7 +48,7 @@ class GraphPainter extends CustomPainter {
     final monthLength = mbd.length;
 
     final offsetter = heightResizer / monthLength;
-    final iptAmount = double.parse("ipt.amount");
+    final iptAmount = ipt.amount;
     final offsetterPrinc = widthResizer / (iptAmount * 1.1);
     final length = widthResizer / (mbd[0].payment * 1.1);
 

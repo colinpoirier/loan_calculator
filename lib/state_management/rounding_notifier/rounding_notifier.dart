@@ -33,66 +33,70 @@ class RoundingNotifier extends CalcNotifier<RoundingState> {
 
   InputState? _inputState;
   InputState get inputState => _inputState!;
-  // bool isTooSmall(double roundedDown) => (_inputState!.amount * _inputState!.percent) >= roundedDown;
+  bool isTooSmall(double roundedDown) => (_inputState!.amount * _inputState!.percentForMath) >= roundedDown;
 
   void calculate(InputState inputState) async {
     ShowDialogs.unFocus();
     if (inputState == _inputState) return;
     _inputState = inputState;
-  //   final amount = inputState.amount;
-  //   final percent = inputState.percent;
-  //   final length = inputState.length;
-  //   final payment = (percent * amount) / (1 - math.pow(1 + percent, -length));
-  //   if (state.roundUp) {
-  //     double roundedPayment = roundUp(payment, inputState.precision);
-  //     if (roundedPayment == state.precisePayment) {
-  //       roundedPayment += 1 / math.pow(10, inputState.precision);
-  //     }
-  //     setState(
-  //         state.copyWith(precisePayment: payment, roundedPayment: roundedPayment, precision: inputState.precision));
-  //   } else if (state.roundDown) {
-  //     final roundedPayment = roundDown(payment, inputState.precision);
-  //     if (isTooSmall(roundedPayment)) {
-  //       setState(state.copyWith(precisePayment: payment, roundDown: false, precision: inputState.precision));
-  //       ShowDialogs.ooops(state.precisePayment!, inputState.amount * inputState.percent, inputState.precision);
-  //       return;
-  //     }
-  //     setState(
-  //         state.copyWith(precisePayment: payment, roundedPayment: roundedPayment, precision: inputState.precision));
-  //   } else {
-  //     setState(state.copyWith(precisePayment: payment, precision: inputState.precision));
-  //   }
-  //   monthlyPaymentController.forward();
-  //   savedIndex.reset();
-  //   await inputTrackerNotifier.addToIpt(InputTracker(
-  //     month: inputState.lengthString,
-  //     amount: inputState.amountString,
-  //     percent: inputState.percentString,
-  //   ));
-  // }
+    final amount = inputState.amount;
+    final percent = inputState.percentForMath;
+    final length = inputState.length;
+    final precision = inputState.precision;
+    final payment = (percent * amount) / (1 - math.pow(1 + percent, -length));
+    if (state.roundUp) {
+      double roundedPayment = roundUp(payment, precision);
+      if (roundedPayment == state.precisePayment) {
+        roundedPayment += 1 / math.pow(10, precision);
+      }
+      setState(
+          state.copyWith(precisePayment: payment, roundedPayment: roundedPayment, precision: precision));
+    } else if (state.roundDown) {
+      final roundedPayment = roundDown(payment, precision);
+      if (isTooSmall(roundedPayment)) {
+        setState(state.copyWith(precisePayment: payment, roundDown: false, precision: precision));
+        ShowDialogs.ooops(state.precisePayment!, amount * percent, precision);
+        return;
+      }
+      setState(
+          state.copyWith(precisePayment: payment, roundedPayment: roundedPayment, precision: precision));
+    } else {
+      setState(state.copyWith(precisePayment: payment, precision: precision));
+    }
+    monthlyPaymentController.forward();
+    savedIndex.reset();
+    await inputTrackerNotifier.addToIpt(InputTracker(
+      month: inputState.length,
+      amount: inputState.amount,
+      percent: inputState.percentForDisplay,
+      monthsString: inputState.lengthString,
+      amountString: inputState.amountString,
+      percentString: inputState.percentString,
+    ));
+  }
 
-  // void roundUpChange(bool? val) {
-  //   double? rounded;
-  //   if (val!) {
-  //     rounded = roundUp(state.precisePayment!, state.precision!);
-  //     if (rounded == state.precisePayment) {
-  //       rounded += 1 / math.pow(10, state.precision!);
-  //     }
-  //   }
-  //   setState(state.copyWith(roundUp: val, roundedPayment: rounded, roundDown: false));
-  //   savedIndex.reset();
-  // }
+  void roundUpChange(bool? val) {
+    double? rounded;
+    if (val!) {
+      rounded = roundUp(state.precisePayment!, state.precision!);
+      if (rounded == state.precisePayment) {
+        rounded += 1 / math.pow(10, state.precision!);
+      }
+    }
+    setState(state.copyWith(roundUp: val, roundedPayment: rounded, roundDown: false));
+    savedIndex.reset();
+  }
 
-  // void roundDownChange(bool? val) {
-  //   double? rounded;
-  //   if (val!) {
-  //     rounded = roundDown(state.precisePayment!, state.precision!);
-  //     if (isTooSmall(rounded)) {
-  //       ShowDialogs.ooops(state.precisePayment!, _inputState!.amount * _inputState!.percent, state.precision!);
-  //       return;
-  //     }
-  //   }
-  //   setState(state.copyWith(roundDown: val, roundedPayment: rounded, roundUp: false));
-  //   savedIndex.reset();
+  void roundDownChange(bool? val) {
+    double? rounded;
+    if (val!) {
+      rounded = roundDown(state.precisePayment!, state.precision!);
+      if (isTooSmall(rounded)) {
+        ShowDialogs.ooops(state.precisePayment!, _inputState!.amount * _inputState!.percentForMath, state.precision!);
+        return;
+      }
+    }
+    setState(state.copyWith(roundDown: val, roundedPayment: rounded, roundUp: false));
+    savedIndex.reset();
   }
 }

@@ -11,14 +11,18 @@ class ThemeBoolStorage {
   bool get isDark => _isDark;
 
   void loadThemeBool() {
-    final isDark = preferences.getBool(SC.themePrefsKey);
-    if (isDark != null) {
-      _isDark = isDark;
-    }
+    try {
+      final isDark = preferences.getBool(SC.themePrefsKey);
+      if (isDark != null) {
+        _isDark = isDark;
+      }
+    } catch (_) {}
   }
 
   Future<void> setThemeBool(bool val) async {
-    await preferences.setBool(SC.themePrefsKey, val);   
-    _isDark = val; 
+    try {
+      await preferences.setBool(SC.themePrefsKey, val);
+      _isDark = val;
+    } catch (_) {}
   }
 }

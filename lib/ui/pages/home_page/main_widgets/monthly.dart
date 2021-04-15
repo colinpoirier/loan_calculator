@@ -80,7 +80,7 @@ class MonthlyPaymentResult extends StatelessWidget {
                         builder: (_, rounding, __) {
                           void Function(bool?)? onChanged;
                           if (!rounding.state.isEditing) {
-                            // onChanged = rounding.roundUpChange;
+                            onChanged = rounding.roundUpChange;
                           }
                           return Checkbox(
                             value: rounding.state.roundUp,
@@ -108,7 +108,7 @@ class MonthlyPaymentResult extends StatelessWidget {
                         builder: (_, rounding, __) {
                           void Function(bool?)? onChanged;
                           if (!rounding.state.isEditing) {
-                            // onChanged = rounding.roundDownChange;
+                            onChanged = rounding.roundDownChange;
                           }
                           return Checkbox(
                             value: rounding.state.roundDown,

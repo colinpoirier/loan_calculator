@@ -26,7 +26,7 @@ class MonthlyBreakDown {
 }
 
 class InputTracker {
-  final double month;
+  final num month;
   final double amount;
   final double percent;
   final String monthsString;
@@ -37,10 +37,12 @@ class InputTracker {
     required this.month,
     required this.amount,
     required this.percent,
-    required this.monthsString,
-    required this.amountString,
-    required this.percentString,
-  });
+    String? monthsString,
+    String? amountString,
+    String? percentString,
+  })  : monthsString = monthsString ?? '$month',
+        amountString = amountString ?? '$amount',
+        percentString = percentString ?? '$percent';
 
   Map<String, dynamic> toJson() => {
         'month': month,
@@ -51,14 +53,17 @@ class InputTracker {
         'percentString': percentString,
       };
 
-  static InputTracker fromJson(Map<String, dynamic> json) => InputTracker(
-        amount: double.parse(json['amount']),
-        percent: double.parse(json['percent']),
-        month: double.parse(json['month']),
-        amountString: json['amountString']??'',
-        percentString: json['percentString']??'',
-        monthsString: json['monthString']??'',
-      );
+  static InputTracker fromJson(Map<String, dynamic> json) {
+    final String? percentString = json['percentString'];
+    return InputTracker(
+      amount: json['amount'],
+      percent: percentString == null ? json['percent'] * 1200 : json['percent'],
+      month: json['month'],
+      amountString: json['amountString'],
+      percentString: percentString,
+      monthsString: json['monthString'],
+    );
+  }
 
   bool operator ==(other) =>
       other is InputTracker && other.amount == amount && other.month == month && other.percent == percent;

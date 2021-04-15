@@ -39,54 +39,54 @@ class FinalNotifier extends CalcNotifier<FinalState> {
   void amortizer(InputState inputState, RoundingState roundingState) {
     if (_roundedPayment == roundingState.roundedPayment) return;
     final mbdList = <MonthlyBreakDown>[];
-  //   final amount = inputState.amount;
-  //   final months = inputState.length;
-  //   final percent = inputState.percent;
-  //   final roundedPayment = roundingState.roundedPayment!;
-  //   final precision = inputState.precision;
-  //   double finalPayment = 0.0;
-  //   double amountTemp = amount;
-  //   double intTracker = 0.0;
-  //   double princTracker = 0.0;
-  //   double interest = 0.0;
-  //   double temp = 0.0;
-  //   for (int n = 1; n <= months; n++) {
-  //     if (roundedPayment > (amountTemp * percent)) {
-  //       if (n == months || (amount - princTracker) < roundedPayment) {
-  //         interest = amountTemp * percent;
-  //         finalPayment = amount - princTracker + interest;
-  //         intTracker += interest;
-  //         temp = finalPayment - interest;
-  //         princTracker += temp;
-  //         mbdList.add(MonthlyBreakDown(
-  //           paidInt: roundToPrecision(interest, precision),
-  //           month: n,
-  //           paidPrinc: roundToPrecision(temp, precision),
-  //           payment: roundToPrecision(finalPayment, precision),
-  //           totPrinc: roundToPrecision(princTracker, precision),
-  //           totInt: roundToPrecision(intTracker, precision),
-  //         ));
-  //         break;
-  //       } else {
-  //         interest = amountTemp * percent;
-  //         intTracker += interest;
-  //         temp = roundedPayment - interest;
-  //         princTracker += temp;
-  //         amountTemp = amountTemp - temp;
-  //         mbdList.add(MonthlyBreakDown(
-  //           paidInt: roundToPrecision(interest, precision),
-  //           month: n,
-  //           paidPrinc: roundToPrecision(temp, precision),
-  //           payment: roundToPrecision(roundedPayment, precision),
-  //           totPrinc: roundToPrecision(princTracker, precision),
-  //           totInt: roundToPrecision(intTracker, precision),
-  //         ));
-  //       }
-  //     } else {
-  //       finalPayment = 0.0;
-  //       break;
-  //     }
-  //   }
-  //   setState(state.copyWith(mbdList: mbdList, finalPayment: finalPayment, precision: inputState.precision));
+    final amount = inputState.amount;
+    final months = inputState.length;
+    final percent = inputState.percentForMath;
+    final roundedPayment = roundingState.roundedPayment!;
+    final precision = inputState.precision;
+    double finalPayment = 0.0;
+    double amountTemp = amount;
+    double intTracker = 0.0;
+    double princTracker = 0.0;
+    double interest = 0.0;
+    double temp = 0.0;
+    for (int n = 1; n <= months; n++) {
+      if (roundedPayment > (amountTemp * percent)) {
+        if (n == months || (amount - princTracker) < roundedPayment) {
+          interest = amountTemp * percent;
+          finalPayment = amount - princTracker + interest;
+          intTracker += interest;
+          temp = finalPayment - interest;
+          princTracker += temp;
+          mbdList.add(MonthlyBreakDown(
+            paidInt: roundToPrecision(interest, precision),
+            month: n,
+            paidPrinc: roundToPrecision(temp, precision),
+            payment: roundToPrecision(finalPayment, precision),
+            totPrinc: roundToPrecision(princTracker, precision),
+            totInt: roundToPrecision(intTracker, precision),
+          ));
+          break;
+        } else {
+          interest = amountTemp * percent;
+          intTracker += interest;
+          temp = roundedPayment - interest;
+          princTracker += temp;
+          amountTemp = amountTemp - temp;
+          mbdList.add(MonthlyBreakDown(
+            paidInt: roundToPrecision(interest, precision),
+            month: n,
+            paidPrinc: roundToPrecision(temp, precision),
+            payment: roundToPrecision(roundedPayment, precision),
+            totPrinc: roundToPrecision(princTracker, precision),
+            totInt: roundToPrecision(intTracker, precision),
+          ));
+        }
+      } else {
+        finalPayment = 0.0;
+        break;
+      }
+    }
+    setState(state.copyWith(mbdList: mbdList, finalPayment: finalPayment, precision: inputState.precision));
   }
 }

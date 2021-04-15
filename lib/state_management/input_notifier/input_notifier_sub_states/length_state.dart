@@ -1,8 +1,11 @@
 import 'package:loan_calc_dev/state_management/input_notifier/input_notifier_sub_states/sub_state.dart';
 
 abstract class LengthState extends SubState{
-  LengthState._({double? months, String? monthsString, String? error}) : super(value: months, stringValue: monthsString, error: error);
+  LengthState._({this.value, String? monthsString, String? error}) : super(value: value, stringValue: monthsString, error: error);
   
+  @override
+  final int? value;
+
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
@@ -32,11 +35,11 @@ class MonthState extends LengthState {
     } else if (parsed < _minMonths || parsed > _maxMonths) {
       return MonthState._(error: '$_minMonths - $_maxMonths');
     } else {
-      return MonthState._(months: parsed.toDouble(), monthsString: input);
+      return MonthState._(months: parsed, monthsString: input);
     }
   }
 
-  MonthState._({double? months, String? monthsString, String? error}) : super._(months: months, monthsString: monthsString, error: error);
+  MonthState._({int? months, String? monthsString, String? error}) : super._(value: months, monthsString: monthsString, error: error);
 
 }
 
@@ -52,15 +55,16 @@ class YearState extends LengthState {
     if (parsed == null) {
       return YearState._(error: 'Please enter a number');
     } else if (parsed < _minYears || parsed > _maxYears) {
-      return YearState._(error: '$_minYears - $_maxYears');
+      return YearState._(error: '${_minYears.toStringAsFixed(5)} - $_maxYears');
     } else if (parsed * 12 % 1 != 0) {
       return YearState._(error: 'Not a whole month');
     } else {
-      return YearState._(months: parsed * 12, monthsString: '${(parsed * 12).toInt()}');
+      final int months = parsed ~/ 1 * 12;
+      return YearState._(months: months, monthsString: '$months');
     }
   }
 
-  YearState._({double? months, String? monthsString, String? error}) : super._(months: months, monthsString: monthsString, error: error);
+  YearState._({int? months, String? monthsString, String? error}) : super._(value: months, monthsString: monthsString, error: error);
 
 }
 

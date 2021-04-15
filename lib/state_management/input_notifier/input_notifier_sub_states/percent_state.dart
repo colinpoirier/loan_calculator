@@ -15,10 +15,13 @@ class PercentState extends SubState {
     } else if (parsed < _minPercent || parsed > _maxPercent) {
       return PercentState._(error: '$_minPercent - $_maxPercent');
     }   
-    return PercentState._(percent: parsed, percentString: input);
+    return PercentState._(value: parsed, percentString: input);
   }
 
-  PercentState._({double? percent,String? percentString, String? error}) : super(value: percent, stringValue: percentString, error: error);
+  @override
+  final double? value;
+
+  PercentState._({this.value,String? percentString, String? error}) : super(value: value, stringValue: percentString, error: error);
 
   @override
   bool operator ==(Object o) {

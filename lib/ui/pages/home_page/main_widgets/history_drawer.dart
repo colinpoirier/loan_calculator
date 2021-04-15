@@ -28,14 +28,13 @@ class HistoryDrawer extends StatelessWidget {
             child: PaddedInkWellColumn(
               onLongPress: () => ShowDialogs.showDeleteConfirm(input, context, inputTrackerNotifier),
               onTap: () {
-                // calculation.assignTextControllers(input);
                 inputNotifier.setControllerInputs(input);
                 Navigator.of(context).pop();
               },
               children: <Widget>[
-                Text('Amount: ${input.amount}', textScaleFactor: 1.0,),
-                Text('Percent: ${input.percent}', textScaleFactor: 1.0,),
-                Text('Months: ${input.month}', textScaleFactor: 1.0,)
+                Text('Amount: ${input.amountString}', textScaleFactor: 1.0,),
+                Text('Percent: ${input.percentString}', textScaleFactor: 1.0,),
+                Text('Months: ${input.monthsString}', textScaleFactor: 1.0,)
               ],
             ),
           );

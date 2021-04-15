@@ -23,16 +23,17 @@ class InputState {
           lengthState: MonthState(input: ''),
         );
 
-  // double get amount => double.parse(amountState.value!);
-  // String get amountString => amountState.value!;
-  // String? get amountError => amountState.error;
+  double get amount => amountState.value!;
+  String get amountString => amountState.stringValue!;
+  String? get amountError => amountState.error;
 
-  // double get percent => double.parse(percentState.value!) / 1200;
-  // String get percentString => percentState.value!;
-  // String? get percentError => percentState.error;
+  double get percentForDisplay => percentState.value!;
+  double get percentForMath => percentForDisplay / 1200;
+  String get percentString => percentState.stringValue!;
+  String? get percentError => percentState.error;
 
-  // double get length => double.parse(lengthState.value!);
-  // String get lengthString => lengthState.value!;
+  int get length => lengthState.value!;
+  String get lengthString => lengthState.stringValue!;
   String? get lengthError => lengthState.error;
 
   int get precision => amountState.precision;

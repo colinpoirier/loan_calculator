@@ -24,15 +24,19 @@ class InputTrackerStorage {
   }
 
   Future<void> saveIptList() async {
-    final iptJsonList = iptList.map((ipt) => ipt.toJson()).toList();
-    await preferences.setString(SC.inputPrefsKey, jsonEncode(iptJsonList));
+    try {
+      final iptJsonList = iptList.map((ipt) => ipt.toJson()).toList();
+      await preferences.setString(SC.inputPrefsKey, jsonEncode(iptJsonList));
+    } catch (_) {}
   }
 
   void loadIptList() {
-    final jsonString = preferences.getString(SC.inputPrefsKey);
-    if (jsonString != null) {
-      final json = jsonDecode(jsonString);
-      iptList.addAll(json.map<InputTracker>((obj) => InputTracker.fromJson(obj)));
-    }
+    try {
+      final jsonString = preferences.getString(SC.inputPrefsKey);
+      if (jsonString != null) {
+        final json = jsonDecode(jsonString);
+        iptList.addAll(json.map<InputTracker>((obj) => InputTracker.fromJson(obj)));
+      }
+    } catch (_) {}
   }
 }
