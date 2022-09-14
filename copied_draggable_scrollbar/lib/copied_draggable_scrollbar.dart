@@ -76,7 +76,7 @@ class _DraggableScrollbarState extends State<DraggableScrollbar>
       curve: Curves.fastOutSlowIn,
     );
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (viewMaxScrollExtent > 0.0 && controller.initialScrollOffset > 0.0) {
         _initOffsetForScrollInitialOffset();
       }
